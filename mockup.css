@@ -53,3 +53,5 @@ footer{background:#0f2a21}
 }
 .footer-contact>a span{white-space:nowrap}
 @media (max-width:1400px){.footer-contact>span,.footer-contact>a{font-size:14px}}
+.card-title-link{color:inherit;text-decoration:none}
+.card-title-link:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}

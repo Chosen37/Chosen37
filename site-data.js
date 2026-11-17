@@ -26,7 +26,54 @@ window.VAIL_BREEZE = {
       "width": 1200,
       "height": 842,
       "price": null,
-      "registration": "2025-BFN-0023586"
+      "registration": "2025-BFN-0023586",
+      "page": "stay-curtis-park.html",
+      "source": {
+        "platform": "Airbnb",
+        "url": "https://airbnb.com/h/curtisparkgem"
+      },
+      "photos": [
+        {
+          "src": "assets/stay-curtis.webp",
+          "src640": "assets/stay-curtis-640.webp",
+          "width": 1200,
+          "height": 842,
+          "alt": "Historic Curtis Park Gem house with a front porch and picket fence"
+        },
+        {
+          "src": "assets/stay-curtis-interior.webp",
+          "src640": "assets/stay-curtis-interior-640.webp",
+          "width": 1200,
+          "height": 799,
+          "alt": "Living room and kitchen at Curtis Park Gem"
+        }
+      ],
+      "photosComplete": false,
+      "details": {
+        "fullDescription": null,
+        "neighborhood": null,
+        "sleepingArrangements": null,
+        "amenitiesComplete": null,
+        "kitchen": null,
+        "wifi": null,
+        "parking": null,
+        "laundry": null,
+        "outdoor": null,
+        "views": null,
+        "accessibility": null,
+        "checkIn": null,
+        "checkOut": null,
+        "houseRules": null,
+        "pets": null,
+        "smoking": null,
+        "cleaningFee": null,
+        "securityDeposit": null,
+        "minimumNights": null,
+        "cancellationPolicy": null,
+        "taxesAndFees": null,
+        "nightlyPricing": null
+      },
+      "directBooking": null
     },
     {
       "id": "executive-lodo",
@@ -53,7 +100,47 @@ window.VAIL_BREEZE = {
       "width": 1200,
       "height": 797,
       "price": null,
-      "registration": "2022-BFN-0015705"
+      "registration": "2022-BFN-0015705",
+      "page": "stay-executive-lodo.html",
+      "source": {
+        "platform": "Airbnb",
+        "url": "https://airbnb.com/h/denverexecutivelodocondo"
+      },
+      "photos": [
+        {
+          "src": "assets/stay-lodo.webp",
+          "src640": "assets/stay-lodo-640.webp",
+          "width": 1200,
+          "height": 797,
+          "alt": "Living and dining area at Executive LoDo Condo"
+        }
+      ],
+      "photosComplete": false,
+      "details": {
+        "fullDescription": null,
+        "neighborhood": null,
+        "sleepingArrangements": null,
+        "amenitiesComplete": null,
+        "kitchen": null,
+        "wifi": null,
+        "parking": null,
+        "laundry": null,
+        "outdoor": null,
+        "views": null,
+        "accessibility": null,
+        "checkIn": null,
+        "checkOut": null,
+        "houseRules": null,
+        "pets": null,
+        "smoking": null,
+        "cleaningFee": null,
+        "securityDeposit": null,
+        "minimumNights": null,
+        "cancellationPolicy": null,
+        "taxesAndFees": null,
+        "nightlyPricing": null
+      },
+      "directBooking": null
     },
     {
       "id": "mountain-view",
@@ -80,7 +167,47 @@ window.VAIL_BREEZE = {
       "width": 1200,
       "height": 800,
       "price": null,
-      "registration": "STR-R2025-031 · City permit USE2023-051"
+      "registration": "STR-R2025-031 · City permit USE2023-051",
+      "page": "stay-mountain-view.html",
+      "source": {
+        "platform": "Airbnb",
+        "url": "https://airbnb.com/h/mountainview3bedroom2bath"
+      },
+      "photos": [
+        {
+          "src": "assets/stay-mountain.webp",
+          "src640": "assets/stay-mountain-640.webp",
+          "width": 1200,
+          "height": 800,
+          "alt": "Mountain View home and front lawn in Englewood"
+        }
+      ],
+      "photosComplete": false,
+      "details": {
+        "fullDescription": null,
+        "neighborhood": null,
+        "sleepingArrangements": null,
+        "amenitiesComplete": null,
+        "kitchen": null,
+        "wifi": null,
+        "parking": null,
+        "laundry": null,
+        "outdoor": null,
+        "views": null,
+        "accessibility": null,
+        "checkIn": null,
+        "checkOut": null,
+        "houseRules": null,
+        "pets": null,
+        "smoking": null,
+        "cleaningFee": null,
+        "securityDeposit": null,
+        "minimumNights": null,
+        "cancellationPolicy": null,
+        "taxesAndFees": null,
+        "nightlyPricing": null
+      },
+      "directBooking": null
     },
     {
       "id": "prime-downtown",
@@ -107,7 +234,47 @@ window.VAIL_BREEZE = {
       "width": 1200,
       "height": 900,
       "price": null,
-      "registration": null
+      "registration": null,
+      "page": "stay-prime-downtown.html",
+      "source": {
+        "platform": "Airbnb",
+        "url": "https://airbnb.com/h/primelocationdowntowndenver"
+      },
+      "photos": [
+        {
+          "src": "assets/stay-downtown.webp",
+          "src640": "assets/stay-downtown-640.webp",
+          "width": 1200,
+          "height": 900,
+          "alt": "Living room at Prime Downtown Denver with a sectional sofa and hardwood floors"
+        }
+      ],
+      "photosComplete": false,
+      "details": {
+        "fullDescription": null,
+        "neighborhood": null,
+        "sleepingArrangements": null,
+        "amenitiesComplete": null,
+        "kitchen": null,
+        "wifi": null,
+        "parking": null,
+        "laundry": null,
+        "outdoor": null,
+        "views": null,
+        "accessibility": null,
+        "checkIn": null,
+        "checkOut": null,
+        "houseRules": null,
+        "pets": null,
+        "smoking": null,
+        "cleaningFee": null,
+        "securityDeposit": null,
+        "minimumNights": null,
+        "cancellationPolicy": null,
+        "taxesAndFees": null,
+        "nightlyPricing": null
+      },
+      "directBooking": null
     },
     {
       "id": "denver-skyland",
@@ -134,7 +301,47 @@ window.VAIL_BREEZE = {
       "width": 1200,
       "height": 675,
       "price": null,
-      "registration": null
+      "registration": null,
+      "page": "stay-denver-skyland.html",
+      "source": {
+        "platform": "Airbnb",
+        "url": "https://airbnb.com/h/denverskyland2bedroom1bath"
+      },
+      "photos": [
+        {
+          "src": "assets/stay-skyland.webp",
+          "src640": "assets/stay-skyland-640.webp",
+          "width": 1200,
+          "height": 675,
+          "alt": "Denver Skyland living room with a sofa, desk, and wood floors"
+        }
+      ],
+      "photosComplete": false,
+      "details": {
+        "fullDescription": null,
+        "neighborhood": null,
+        "sleepingArrangements": null,
+        "amenitiesComplete": null,
+        "kitchen": null,
+        "wifi": null,
+        "parking": null,
+        "laundry": null,
+        "outdoor": null,
+        "views": null,
+        "accessibility": null,
+        "checkIn": null,
+        "checkOut": null,
+        "houseRules": null,
+        "pets": null,
+        "smoking": null,
+        "cleaningFee": null,
+        "securityDeposit": null,
+        "minimumNights": null,
+        "cancellationPolicy": null,
+        "taxesAndFees": null,
+        "nightlyPricing": null
+      },
+      "directBooking": null
     }
   ],
   "plans": [
@@ -158,6 +365,18 @@ window.VAIL_BREEZE = {
       "rate": 10,
       "label": "UNFURNISHED HOMES",
       "text": "For unfurnished properties offered as a longer-term home."
+    }
+  ],
+  "pendingSources": [
+    {
+      "platform": "Facebook Marketplace",
+      "url": "https://www.facebook.com/marketplace/item/642524124920265",
+      "status": "awaiting owner photos and details"
+    },
+    {
+      "platform": "Facebook Marketplace",
+      "url": "https://www.facebook.com/marketplace/item/345111281682393",
+      "status": "awaiting owner photos and details"
     }
   ]
 };
