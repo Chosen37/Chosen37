@@ -3,7 +3,7 @@
 /* Hero: warm golden-hour skyline that dissolves into the cream page on the left */
 .page-home .hero{min-height:clamp(360px,24.7vw,400px);background:#faf5eb}
 .page-home .hero-image{left:auto;width:70%}
-.page-home .hero-image>img{object-position:center 55%}
+.page-home .hero-image>img,.page-home .hero-video{object-position:center 50%}
 .page-home .hero-image:after{background:linear-gradient(90deg,#faf5eb 0%,#faf5eb 4%,#faf5ebcc 12%,#faf5eb66 22%,#faf5eb14 34%,transparent 44%)}
 .page-home .hero h1{letter-spacing:-.035em}
 .page-home .hero-actions .button-outline{background:#fffdf8;border:2px solid #14211b;color:#14211b}
@@ -58,3 +58,7 @@ footer{background:#0f2a21}
 .page-home .plan-badge{background:#8c6115;border-color:#8c6115;color:#fffaf0}
 /* Reserve the filter bar's space before scripts reveal it (prevents a layout jump). */
 #stay-filters[hidden]{display:grid!important;visibility:hidden}
+
+/* Hero video sits under the cream fade; the still frame shows until it plays */
+.page-home .hero-image:after{z-index:3}
+.page-home .hero-film-controls{z-index:5}
