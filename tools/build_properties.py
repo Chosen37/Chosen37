@@ -27,14 +27,12 @@ E = html.escape
 LABELS = {
     "fullDescription": "Full description", "neighborhood": "Neighborhood",
     "sleepingArrangements": "Sleeping arrangements", "amenitiesComplete": "Complete amenities",
-    "kitchen": "Kitchen & appliances", "wifi": "Wi-Fi", "parking": "Parking", "laundry": "Laundry",
-    "outdoor": "Outdoor space", "views": "Views", "accessibility": "Accessibility",
+    "accessibility": "Accessibility", "safety": "Safety & property", "houseRulesNotes": "Additional house rules",
     "checkIn": "Check-in", "checkOut": "Checkout", "houseRules": "House rules", "pets": "Pets",
     "smoking": "Smoking", "cleaningFee": "Cleaning fee", "securityDeposit": "Security deposit",
     "minimumNights": "Minimum nights", "cancellationPolicy": "Cancellation policy",
     "taxesAndFees": "Taxes & fees", "nightlyPricing": "Nightly pricing",
 }
-HOME_FIELDS = ["sleepingArrangements", "kitchen", "wifi", "parking", "laundry", "outdoor", "views", "accessibility"]
 POLICY_FIELDS = ["checkIn", "checkOut", "houseRules", "pets", "smoking", "minimumNights",
                  "cancellationPolicy", "cleaningFee", "securityDeposit", "taxesAndFees", "nightlyPricing"]
 
@@ -76,6 +74,8 @@ def relink_cards(path):
                    f'<a class="property-photo" href="{page}" aria-label="Photos and details for {E(name)}">', a, count=1)
         b = re.sub(rf'<h3>(?:<a class="card-title-link" href="[^"]*">)?{re.escape(E(name, quote=False))}(?:</a>)?</h3>',
                    f'<h3><a class="card-title-link" href="{page}">{E(name, quote=False)}</a></h3>', b, count=1)
+        b = re.sub(r'<a class="button button-gold booking-link" href="[^"]*"[^>]*>.*?</a>',
+                   f'<a class="button button-gold booking-link" href="{page}#book" aria-label="View and book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
         t = t.replace(a, b)
     path.write_text(t)
 
@@ -110,7 +110,8 @@ def page_head(p):
     h = re.sub(r'(<meta property="og:image:height" content=")[^"]*', lambda m: m.group(1) + str(p['photos'][0]['height']), h, count=1)
     if "property.css" not in h:
         h = h.replace('<link rel="stylesheet" href="legal.css">', '<link rel="stylesheet" href="legal.css"><link rel="stylesheet" href="property.css">')
-        h = h.replace('<script src="app.js" defer></script>', '<script src="app.js" defer></script><script src="gallery.js" defer></script>')
+        h = h.replace('<script src="app.js" defer></script>', '<script src="app.js" defer></script><script src="gallery.js" defer></script><script src="booking-request.js" defer></script>')
+    h = h.replace("form-action 'none'", "form-action https://formsubmit.co")
     if p.get("directBooking"):
         origin = "{u.scheme}://{u.netloc}".format(u=urlparse(p["directBooking"]["bookingUrl"]))
         h = h.replace("object-src 'none';", f"object-src 'none'; frame-src {origin};")
@@ -144,7 +145,7 @@ def gallery_html(p):
 
 def viewer_html(p):
     thumbs = "".join(
-        f'<button type="button" data-viewer-thumb aria-label="Show photo {i + 1}"><img src="{x["src640"]}" alt="" decoding="async"></button>'
+        f'<button type="button" data-viewer-thumb aria-label="Show photo {i + 1}"><img data-src="{x["src640"]}" alt="" decoding="async"></button>'
         for i, x in enumerate(p["photos"]))
     return (f'<dialog class="photo-viewer" id="photo-viewer" aria-label="{E(p["name"])} photos">'
             f'<div class="viewer-bar"><p><strong>{E(p["name"])}</strong><span class="viewer-count" data-viewer-count></span></p>'
@@ -154,22 +155,54 @@ def viewer_html(p):
             f'<div class="viewer-thumbs">{thumbs if len(p["photos"]) > 1 else ""}</div></dialog>')
 
 
+REQUEST_ENDPOINT = "https://formsubmit.co/vailbreezeproperties@gmail.com"
+
+
 def booking_panel(p):
     contact = ('<div class="contact-lines"><a href="tel:+17208282021">(720) 828-2021</a>'
                '<a href="mailto:vailbreezeproperties@gmail.com">vailbreezeproperties@gmail.com</a></div>')
-    plan = f'<button type="button" class="plan-link" data-inquire data-reference="{p["id"]}">Add to a stay plan</button>'
     db = p.get("directBooking")
     if db:
-        return (f'<aside class="booking-panel booking-direct" aria-labelledby="book-title"><h2 id="book-title">Book direct</h2>'
+        return (f'<aside class="booking-panel booking-direct" id="book" aria-labelledby="book-title"><h2 id="book-title">Book direct</h2>'
                 f'<p>Choose your dates to see live availability and your full price, including cleaning fees and taxes. '
                 f'Secure checkout is provided by {E(db["provider"])}.</p>'
                 f'<iframe class="booking-frame" src="{E(db["bookingUrl"])}" title="Book {E(p["name"])} direct" loading="lazy"></iframe>'
                 f'<p class="sync-note">Availability syncs with our other booking channels through {E(db["provider"])}. '
-                f'Your dates are confirmed only after checkout completes.</p>{contact}{plan}</aside>')
-    return (f'<aside class="booking-panel" aria-labelledby="book-title"><h2 id="book-title">Check dates &amp; book</h2>'
-            f'<p>See live availability, nightly rates, fees, and house rules for your dates on Airbnb, where you can book securely.</p>'
-            f'<a class="button button-gold" href="{p["url"]}" target="_blank" rel="noopener noreferrer">Check availability on Airbnb {ICON["external"]}</a>'
-            f'<p>Questions before you book? We are happy to help.</p>{contact}{plan}</aside>')
+                f'Your dates are confirmed only after checkout completes.</p>{contact}</aside>')
+    n = E(p["name"])
+    return (f'<aside class="booking-panel" id="book" aria-labelledby="book-title"><h2 id="book-title">Request to book</h2>'
+            f'<p>Choose your dates and send a request directly to Vail Breeze. We reply to confirm availability and your total price.</p>'
+            f'<form class="request-form" action="{REQUEST_ENDPOINT}" method="POST" data-request data-property="{n}" data-max-guests="{p["guests"]}">'
+            f'<input type="hidden" name="_subject" value="Booking request: {n}">'
+            f'<input type="hidden" name="_template" value="table">'
+            f'<input type="hidden" name="_next" value="" data-next>'
+            f'<input type="hidden" name="Property" value="{n}">'
+            f'<input type="hidden" name="Nights" value="" data-nights-field>'
+            f'<div class="hp-field" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>'
+            f'<div class="rq-row"><label for="rq-in-{p["id"]}">Check-in<input id="rq-in-{p["id"]}" name="Check-in" type="date" required data-checkin></label>'
+            f'<label for="rq-out-{p["id"]}">Checkout<input id="rq-out-{p["id"]}" name="Checkout" type="date" required data-checkout></label></div>'
+            f'<p class="rq-nights" data-nights aria-live="polite">Select dates to see your stay length.</p>'
+            f'<label for="rq-guests-{p["id"]}">Guests<select id="rq-guests-{p["id"]}" name="Guests" required>'
+            + "".join(f'<option value="{g}"{" selected" if g == min(2, p["guests"]) else ""}>{plural(g, "guest")}</option>' for g in range(1, p["guests"] + 1))
+            + f'</select></label>'
+            f'<label for="rq-name-{p["id"]}">Full name<input id="rq-name-{p["id"]}" name="Name" autocomplete="name" required maxlength="100"></label>'
+            f'<label for="rq-email-{p["id"]}">Email<input id="rq-email-{p["id"]}" name="email" type="email" autocomplete="email" required maxlength="150"></label>'
+            f'<label for="rq-phone-{p["id"]}">Phone <span class="optional">(optional)</span><input id="rq-phone-{p["id"]}" name="Phone" type="tel" autocomplete="tel" maxlength="40"></label>'
+            f'<label for="rq-msg-{p["id"]}">Message <span class="optional">(optional)</span><textarea id="rq-msg-{p["id"]}" name="Message" rows="3" maxlength="2000" placeholder="Reason for your stay, arrival time, pets, or questions"></textarea></label>'
+            f'<label class="rq-consent" for="rq-ok-{p["id"]}"><input id="rq-ok-{p["id"]}" type="checkbox" name="Acknowledged" value="Yes" required>'
+            f'<span>I understand this is a request, not a confirmed reservation, and that no payment is taken now. See our <a href="privacy.html">Privacy Policy</a>.</span></label>'
+            f'<p class="rq-error" data-request-error role="alert" hidden></p>'
+            f'<button class="button button-gold" type="submit">Send booking request</button>'
+            f'<button class="text-link rq-email" type="button" data-request-email>Or email this request instead</button>'
+            f'</form>'
+            f'<p class="sync-note">We confirm your dates, nightly rate, cleaning fee, and taxes in our reply, along with secure payment instructions. '
+            f'Your stay is booked only once you accept and pay.</p>'
+            f'<p class="rq-alt">Prefer to book instantly? <a href="{p["url"]}" target="_blank" rel="noopener noreferrer">Book on Airbnb</a></p>'
+            f'{contact}</aside>')
+
+
+def list_html(items):
+    return '<ul class="detail-list">' + "".join(f"<li>{ICON['check']}<span>{E(str(x))}</span></li>" for x in items) + "</ul>"
 
 
 def detail_page(p, others):
@@ -179,33 +212,54 @@ def detail_page(p, others):
              f'<span>{ICON["bed"]} {plural(p["beds"], "bed")}</span>'
              f'<span>{ICON["bath"]} {plural(p["baths"], "bath")}</span></p>')
     about = f'<p class="lead">{E(p["description"])}</p>'
-    if d.get("fullDescription"):
-        about += "".join(f"<p>{E(x)}</p>" for x in str(d["fullDescription"]).split("\n\n"))
-    if d.get("neighborhood"):
-        about += f'<p>{E(d["neighborhood"])}</p>'
+    for block in d.get("fullDescription") or []:
+        if block.get("heading"):
+            about += f'<h3>{E(block["heading"])}</h3>'
+        bullets = [x for x in block["lines"] if x.startswith("•")]
+        for x in block["lines"]:
+            if not x.startswith("•"):
+                about += f"<p>{E(x)}</p>"
+        if bullets:
+            about += list_html([b.lstrip("•").strip() for b in bullets])
     body = f'<section aria-labelledby="about-title"><h2 id="about-title">About this home</h2>{about}</section>'
     body += ('<section aria-labelledby="glance-title"><h2 id="glance-title">At a glance</h2><dl class="fact-grid">'
              f'<div><dt>Guests</dt><dd>{p["guests"]}</dd></div><div><dt>Bedrooms</dt><dd>{p["bedrooms"]}</dd></div>'
              f'<div><dt>Beds</dt><dd>{p["beds"]}</dd></div><div><dt>Baths</dt><dd>{p["baths"]:g}</dd></div></dl></section>')
-    amen = d.get("amenitiesComplete") or p["amenities"]
-    amen_title = "Amenities" if d.get("amenitiesComplete") else "Highlights"
-    body += f'<section aria-labelledby="amen-title"><h2 id="amen-title">{amen_title}</h2>{value_html(amen)}</section>'
-    home_rows = [(LABELS[k], d[k]) for k in HOME_FIELDS if d.get(k)]
-    if home_rows:
-        body += ('<section aria-labelledby="home-title"><h2 id="home-title">The home</h2><dl class="policy-list">'
-                 + "".join(f"<div><dt>{E(k)}</dt><dd>{value_html(v)}</dd></div>" for k, v in home_rows) + "</dl></section>")
-    pol_rows = [(LABELS[k], d[k]) for k in POLICY_FIELDS if d.get(k)]
-    pol = ""
+    if d.get("sleepingArrangements"):
+        body += ('<section aria-labelledby="sleep-title"><h2 id="sleep-title">Where you’ll sleep</h2><ul class="sleep-list">'
+                 + "".join(f'<li>{ICON["bed"]}<strong>{E(s["room"])}</strong><span>{E(s["beds"])}</span></li>' for s in d["sleepingArrangements"])
+                 + '</ul></section>')
+    if d.get("amenitiesComplete"):
+        groups = "".join(f'<div class="amenity-group"><h3>{E(g["group"])}</h3>{list_html(g["items"])}</div>' for g in d["amenitiesComplete"])
+        body += f'<section aria-labelledby="amen-title"><h2 id="amen-title">Amenities</h2><div class="amenity-groups">{groups}</div></section>'
+    else:
+        body += f'<section aria-labelledby="amen-title"><h2 id="amen-title">Highlights</h2>{list_html(p["amenities"])}</section>'
+    nb = d.get("neighborhood")
+    if nb or d.get("locationArea"):
+        loc = ""
+        if nb and nb.get("name"):
+            loc += f'<h3>{E(nb["name"])}</h3>'
+        if nb and nb.get("summary"):
+            loc += f'<p>{E(nb["summary"])}</p>'
+        loc += f'<p class="source-note">{E(d.get("locationArea") or p["location"])}. The exact address is shared after your booking is confirmed.</p>'
+        body += f'<section aria-labelledby="loc-title"><h2 id="loc-title">Location</h2>{loc}</section>'
+    rules = ""
+    if d.get("houseRules"):
+        rules += list_html(d["houseRules"])
+    if d.get("houseRulesNotes"):
+        rules += f'<details class="rules-notes"><summary>Additional house rules</summary>' + "".join(f"<p>{E(x.strip())}</p>" for x in d["houseRulesNotes"].split("\n") if x.strip()) + "</details>"
+    if d.get("safety"):
+        rules += f'<h3>Safety &amp; property</h3>{list_html(d["safety"])}'
+    if d.get("accessibility"):
+        rules += f'<h3>Accessibility</h3>{list_html(d["accessibility"])}'
+    pol_rows = [(LABELS[k], d[k]) for k in POLICY_FIELDS if d.get(k) and k not in ("houseRules", "pets", "smoking")]
     if pol_rows:
-        pol = '<dl class="policy-list">' + "".join(f"<div><dt>{E(k)}</dt><dd>{value_html(v)}</dd></div>" for k, v in pol_rows) + "</dl>"
-    missing_policy = [k for k in POLICY_FIELDS if not d.get(k)]
-    if missing_policy:
-        where = "at checkout" if p.get("directBooking") else "on the Airbnb listing for your dates"
-        pol += (f'<p class="source-note">Current rates, cleaning fees, taxes, minimum stay, cancellation policy, and house rules are shown {where} before you pay.</p>')
-    body += f'<section aria-labelledby="policy-title"><h2 id="policy-title">Rates, rules &amp; policies</h2>{pol}'
+        rules += '<dl class="policy-list">' + "".join(f"<div><dt>{E(k)}</dt><dd>{value_html(v)}</dd></div>" for k, v in pol_rows) + "</dl>"
+    rules += ('<p class="source-note">Check-in and checkout times, nightly rates, cleaning fee, taxes, minimum stay, and cancellation policy '
+              'are confirmed in writing for your dates before you pay.</p>')
     if p.get("registration"):
-        body += f'<p class="registration-line">Short-term rental registration: {E(p["registration"])}</p>'
-    body += "</section>"
+        rules += f'<p class="registration-line">Short-term rental registration: {E(p["registration"])}</p>'
+    body += f'<section aria-labelledby="policy-title"><h2 id="policy-title">House rules &amp; policies</h2>{rules}</section>'
     other_cards = "".join(cards[o["id"]] for o in others if o["id"] in cards)
     main = (f'<main id="main" tabindex="-1"><article class="property-page wrap" aria-labelledby="property-title">'
             f'<nav class="crumbs" aria-label="Breadcrumb"><a href="stays.html">Furnished stays</a><span aria-hidden="true">/</span><span aria-current="page">{E(p["name"])}</span></nav>'
@@ -223,6 +277,19 @@ def detail_page(p, others):
 for i, p in enumerate(PROPS):
     others = [PROPS[(i + k) % len(PROPS)] for k in range(1, min(4, len(PROPS)))]
     (ROOT / p["page"]).write_text(detail_page(p, others))
+
+
+# ---------- 3b. request confirmation page ----------
+sent_head = re.sub(r"<title>.*?</title>", "<title>Request sent | Vail Breeze Properties</title>", head, count=1)
+sent_head = re.sub(r'<body class="[^"]*"', '<body class="page-property"', sent_head, count=1)
+sent_head = sent_head.replace('<meta name="viewport"', '<meta name="robots" content="noindex"><meta name="viewport"', 1)
+sent_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap request-sent"><span class="eyebrow">Booking request</span>'
+             '<h1>Request sent.<br><em>Thank you.</em></h1>'
+             '<p>Your request is with Vail Breeze. We will reply by email to confirm availability, your total price, and how to pay securely. '
+             'Your stay is booked only once you accept and pay.</p>'
+             '<p>Need an answer sooner? Call <a href="tel:+17208282021">(720) 828-2021</a>.</p>'
+             '<a class="button button-gold" href="stays.html">Back to the stays</a></section></main>')
+(ROOT / "request-sent.html").write_text(sent_head + sent_main + foot)
 
 # ---------- 4. sitemap ----------
 sm = (ROOT / "sitemap.xml").read_text()
@@ -242,7 +309,7 @@ for p in PROPS:
     lines += [f"## {p['name']}", "", f"- Source: {p['source']['platform']} — {p['source']['url']}",
               f"- Page: `{p['page']}`",
               f"- Photos: {len(p['photos'])} published — {'complete set ✅' if p.get('photosComplete') else 'full original set still needed ⏳'}",
-              f"- Direct booking: {'connected via ' + p['directBooking']['provider'] + ' ✅' if p.get('directBooking') else 'not connected ⏳ (guests are sent to Airbnb)'}",
+              f"- Direct booking: {'connected via ' + p['directBooking']['provider'] + ' ✅' if p.get('directBooking') else 'not connected ⏳ (booking requests by email until a booking system is connected)'}",
               "", "| Field | Status |", "|---|---|"]
     lines += [f"| {k} | {'✅ ' + E(str(p.get(k))) if p.get(k) not in (None, '') else '⏳'} |" for k in core]
     lines += [f"| {LABELS[k]} | {'✅' if d.get(k) else '⏳'} |" for k in LABELS]

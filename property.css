@@ -88,3 +88,38 @@
 .viewer-bar p{margin:0;color:#f6f1e6}
 .other-stays{margin-top:0}
 .other-stays .property-card h3{font-size:clamp(24px,2.1vw,32px);overflow-wrap:break-word}
+
+/* Description, sleeping, amenities */
+.property-body h3{font:700 20px/1.25 var(--serif);color:var(--ink);margin:18px 0 8px}
+.sleep-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;list-style:none;padding:0;margin:0}
+.sleep-list li{display:grid;gap:4px;background:var(--cream);border:1px solid #e3d9c6;border-radius:12px;padding:14px 16px}
+.sleep-list .icon{width:24px;height:24px;color:var(--gold-dark)}
+.sleep-list strong{font-size:17px;color:var(--ink)}
+.sleep-list span{font-size:15px;color:#2c3a33}
+.amenity-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 32px}
+.amenity-group h3{font-size:18px;margin-top:14px}
+.amenity-group .detail-list{grid-template-columns:1fr;gap:6px}
+.amenity-group .detail-list li{font-size:16px}
+.rules-notes{margin:14px 0;border:1px solid #e3d9c6;border-radius:12px;padding:12px 16px;background:var(--cream)}
+.rules-notes summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:28px}
+.rules-notes p{font-size:15px;margin-top:8px}
+
+/* Booking request form */
+.request-form{display:grid;gap:12px;margin-top:6px}
+.request-form label{display:grid;gap:5px;font-size:14px;font-weight:600;color:var(--ink)}
+.request-form .optional{font-weight:400;color:var(--muted)}
+.request-form input,.request-form select,.request-form textarea{font:400 16px var(--sans);color:var(--ink);background:#fff;border:1px solid #cfc4ae;border-radius:8px;padding:10px 12px;min-height:44px;width:100%;min-width:0}
+.request-form input:focus-visible,.request-form select:focus-visible,.request-form textarea:focus-visible{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+.rq-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rq-nights{font-size:14px!important;color:var(--gold-dark)!important;font-weight:600;margin:0!important}
+.rq-consent{grid-template-columns:auto 1fr!important;align-items:start;font-weight:400!important;font-size:13px!important;line-height:1.45;color:#2c3a33!important}
+.rq-consent input{width:20px;min-height:20px;height:20px;margin-top:1px}
+.rq-error{background:#fbeaea;color:#8a1f1f!important;border-radius:8px;padding:8px 12px;font-size:14px!important;margin:0!important}
+.request-form .button{width:100%;justify-content:center;margin:0}
+.rq-email{justify-self:center;background:none;border:0;font-size:14px;text-decoration:underline;text-underline-offset:3px;color:var(--ink);cursor:pointer;min-height:36px}
+.rq-alt{font-size:14px!important}
+.rq-alt a{color:var(--ink)}
+.hp-field{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.request-sent{padding-block:clamp(48px,7vw,110px)}
+.request-sent p{max-width:60ch;font-size:18px;line-height:1.55;margin-bottom:14px}
+@media (max-width:420px){.rq-row{grid-template-columns:1fr}}

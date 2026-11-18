@@ -106,7 +106,7 @@
         card.hidden = !show;
         if (show) count++;
       });
-      $('[data-filter-count]').textContent = `${count} ${count === 1 ? 'home' : 'homes'} · Book on Airbnb`;
+      $('[data-filter-count]').textContent = `${count} ${count === 1 ? 'home' : 'homes'} · Book direct or on Airbnb`;
       $('[data-empty]').hidden = count > 0;
       if (updateURL) {
         const url = new URL(location.href);

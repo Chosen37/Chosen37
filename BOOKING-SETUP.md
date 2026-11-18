@@ -1,5 +1,13 @@
 # Direct booking setup — Vail Breeze Properties
 
+## Working now: booking requests
+
+Each property page has a **Request to book** form. Guests choose check-in and checkout dates, the number of guests and their contact details, then send. The request is emailed to vailbreezeproperties@gmail.com through FormSubmit (formsubmit.co), a free form-forwarding service. Kirk replies with availability, the total price and payment instructions. Nothing is charged online, and the dates aren't held until Kirk confirms them.
+
+**One-time step:** the first request sent from the live site triggers an email from FormSubmit to vailbreezeproperties@gmail.com. Kirk must click **Activate** in that email, or requests won't be delivered. Send yourself a test request first.
+
+Limitations until a booking system is connected: no live calendar, so a request can be made for dates already booked on Airbnb; no automatic pricing; and no online payment.
+
 Direct booking needs a booking system (a property management system, or PMS) that is officially connected to Airbnb and Vrbo. The website cannot read live availability or take payments from an Airbnb listing link by itself. Airbnb shares calendars, rates and reservations only with approved software partners.
 
 ## Recommendation: OwnerRez

@@ -31,6 +31,7 @@
 
   function open(i, from) {
     opener = from || null;
+    thumbs.forEach(t => { const im = t.querySelector('img[data-src]'); if (im) { im.src = im.dataset.src; im.removeAttribute('data-src'); } });
     show(i);
     viewer.showModal();
     viewer.querySelector('[data-viewer-close]').focus();
