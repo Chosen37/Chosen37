@@ -461,3 +461,10 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
 @media (max-width:700px){.os-head h2{max-width:none}}
 /* Section rhythm: consistent heading spacing on every screen */
 .page-home .home-heading h2,.explore-head h2,.os-head h2,.cc-copy h2{text-wrap:balance}
+.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:800px){.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:0}.stat:nth-child(3){border-left:1px solid var(--line);padding-left:clamp(12px,3vw,24px)}.stat{padding-inline:clamp(12px,3vw,24px)}.stat-num{font-size:clamp(30px,8vw,44px)}}
+@media (max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr;row-gap:24px}
+  .stat:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0;padding-top:20px;border-top:1px solid var(--line)}
+  .stat:first-child{padding-left:0}
+}
