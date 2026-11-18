@@ -110,9 +110,6 @@ def relink_cards(path):
     # homepage: overall rating under "A place to feel at home"
     avg, n = portfolio_rating()
     t = re.sub(r'<p class="collection-rating">.*?</p>', '', t, flags=re.S)
-    if avg and 'id="collection"' in t:
-        t = t.replace('<h2>A place to feel <em>at home</em></h2></div>',
-                      f'<h2>A place to feel <em>at home</em></h2><p class="collection-rating">{STAR}<strong>{avg:.2f}</strong> average from {n} Airbnb guest reviews</p></div>', 1)
     if avg:
         # numbers band and review heading on the homepage
         t = re.sub(r'(data-stat="avg">)[^<]*', lambda m: m.group(1) + f"{avg:.2f}", t)

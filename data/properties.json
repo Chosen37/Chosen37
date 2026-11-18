@@ -751,14 +751,6 @@
           "room": "Exterior 3"
         },
         {
-          "src": "assets/stays/executive-lodo/64.webp",
-          "src640": "assets/stays/executive-lodo/64-640.webp",
-          "width": 1440,
-          "height": 811,
-          "alt": "Executive LoDo Condo — Shuffle Board table and Pool Table",
-          "room": "Game room"
-        },
-        {
           "src": "assets/stays/executive-lodo/10.webp",
           "src640": "assets/stays/executive-lodo/10-640.webp",
           "width": 1440,
@@ -941,14 +933,6 @@
           "height": 938,
           "alt": "Executive LoDo Condo — Game room",
           "room": "Game room"
-        },
-        {
-          "src": "assets/stays/executive-lodo/24.webp",
-          "src640": "assets/stays/executive-lodo/24-640.webp",
-          "width": 1440,
-          "height": 958,
-          "alt": "Executive LoDo Condo — Office 1",
-          "room": "Office 1"
         },
         {
           "src": "assets/stays/executive-lodo/13.webp",
@@ -2264,14 +2248,6 @@
           "src640": "assets/stays/prime-downtown/42-640.webp",
           "width": 1440,
           "height": 959,
-          "alt": "Prime Downtown Denver — Additional photos",
-          "room": "Additional photos"
-        },
-        {
-          "src": "assets/stays/prime-downtown/43.webp",
-          "src640": "assets/stays/prime-downtown/43-640.webp",
-          "width": 1440,
-          "height": 957,
           "alt": "Prime Downtown Denver — Additional photos",
           "room": "Additional photos"
         }

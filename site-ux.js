@@ -38,6 +38,11 @@
   // ---- Homepage hero: crossfade through more photos after the page has loaded ----
   const heroBox = document.querySelector('[data-hero-slides]');
   if (heroBox && !reduce) {
+    // Note the visitor's first interaction from the start, so rotation can begin right away.
+    const evs = ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'];
+    let interacted = false, onInteract = null;
+    const mark = () => { interacted = true; evs.forEach(ev => removeEventListener(ev, mark, true)); if (onInteract) onInteract(); };
+    evs.forEach(ev => addEventListener(ev, mark, { capture: true, passive: true }));
     const sizes = '(max-width: 900px) 100vw, 70vw';
     const extra = [1, 2, 3, 4].map(n => {
       const im = new Image();
@@ -75,9 +80,16 @@
         im.sizes = sizes; im.srcset = im.dataset.srcset;
         heroBox.appendChild(im);
       });
-      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
-      document.addEventListener('visibilitychange', run);
-      run();
+      // Rotation begins at the visitor's first interaction (or after 12 seconds), so a
+      // later photo is never measured as the page's main image.
+      let go = false;
+      const begin = () => {
+        if (go) return; go = true;
+        if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
+        document.addEventListener('visibilitychange', run);
+        run();
+      };
+      if (interacted) begin(); else { onInteract = begin; setTimeout(begin, 12000); }
     };
     // Wait until the page has fully loaded so the extra photos never compete with it.
     const later = () => idle(start, { timeout: 2500 });
