@@ -44,12 +44,20 @@
     const mark = () => { interacted = true; evs.forEach(ev => removeEventListener(ev, mark, true)); if (onInteract) onInteract(); };
     evs.forEach(ev => addEventListener(ev, mark, { capture: true, passive: true }));
     const sizes = '(max-width: 900px) 100vw, 70vw';
-    const extra = [1, 2, 3, 4].map(n => {
+    // After the first photo (Curtis Park Gem): Mountain View, a Curtis Park living room,
+    // Prime Downtown, and the lobby.
+    const sets = [
+      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`),
+      [640, 1440].map(w => `assets/hero-slide-3-${w}.webp ${w}w`),
+      [640, 1440].map(w => `assets/hero-slide-4-${w}.webp ${w}w`),
+      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`)
+    ];
+    const extra = sets.map(set => {
       const im = new Image();
       im.className = 'hero-slide';
       im.alt = ''; im.setAttribute('aria-hidden', 'true');
       im.decoding = 'async'; im.width = 1440; im.height = 957;
-      im.dataset.srcset = [640, 1440].map(w => `assets/hero-slide-${n}-${w}.webp ${w}w`).join(', ');
+      im.dataset.srcset = set.join(', ');
       return im;
     });
     const slides = [heroBox.querySelector('img'), ...extra];
