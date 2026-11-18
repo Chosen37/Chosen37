@@ -133,8 +133,10 @@ def reviews_html():
         out.append(
             '<figure class="gr-card"><p class="gr-stars"><span class="sr-only">5 out of 5 stars</span>' + STAR * 5 + '</p>'
             f'<blockquote><p>“{E(r["text"], quote=False)}”</p></blockquote>'
-            f'<figcaption><strong>{E(r["name"])}</strong><span>{E(meta)}</span>'
-            f'<span class="gr-home">{E(r.get("source", "Airbnb"))} guest at {link}</span></figcaption></figure>')
+            + ('<figcaption>' + (f'<img class="gr-avatar" src="{r["photo"]}" alt="{E(r["name"])}" width="144" height="144" loading="lazy" decoding="async">'
+               if r.get("photo") and (ROOT / r["photo"]).exists() else f'<span class="gr-avatar" aria-hidden="true">{E(r["name"][:1])}</span>')) +
+            f'<span class="gr-who"><strong>{E(r["name"])}</strong><span>{E(meta)}</span>'
+            f'<span class="gr-home">{E(r.get("source", "Airbnb"))} guest at {link}</span></span></figcaption></figure>')
     return "".join(out)
 
 

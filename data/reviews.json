@@ -1,19 +1,68 @@
 {
-  "_readme": "Guest reviews shown on the homepage. Airbnb reviews are quoted word for word from the public listing pages (an ellipsis marks a shortened quote). Run tools/build_properties.py after editing.",
+  "_readme": "Guest reviews shown on the homepage. Airbnb reviews are quoted word for word from the public listing pages (an ellipsis marks a shortened quote). Guest photos are each reviewer's own Airbnb profile photo, used with their written permission (keep the permissions on file). Run tools/build_properties.py after editing.",
   "reviews": [
-    {"name": "Andrew", "from": "Celina, Texas", "date": "November 2026", "home": "executive-lodo", "source": "Airbnb",
-     "text": "A great place for a long business trip for myself and one of my coworkers. Very safe and secure. The instructions were spot on. Will likely be back."},
-    {"name": "Melina", "from": "", "date": "April 2026", "home": "curtis-park", "source": "Airbnb",
-     "text": "This Airbnb was absolutely perfect from start to finish! The place was beautifully decorated, immaculate, and spotless—it truly felt like a boutique hotel. …"},
-    {"name": "Steve", "from": "Tumwater, Washington", "date": "June 2026", "home": "mountain-view", "source": "Airbnb",
-     "text": "Very clean and comfortable place. Thoughtful amenities throughout especially kitchen and bathrooms. Private backyard with covered patio and fire pit great space for eating a meal or just hanging out. Would stay here again."},
-    {"name": "Matthew", "from": "Albuquerque, New Mexico", "date": "March 2024", "home": "executive-lodo", "source": "Airbnb",
-     "text": "This is a beautiful 19th floor apartment in a fantastic location. Beautifully appointed. Great shower, lovely beds, nice living room, kitchen that has everything. Lovely building, secure and safe. We loved staying here."},
-    {"name": "Mary", "from": "San Jose, California", "date": "June 2026", "home": "prime-downtown", "source": "Airbnb",
-     "text": "My husband and I really enjoyed our stay here. This is such a great location. You are a 10 minute walk to Coors Field (Colorado Rockies) and 10 minute walk to Ball Arena (Denver Nuggets and Colorado Avalanche). …"},
-    {"name": "Tawni", "from": "Saint Charles, Missouri", "date": "March 2026", "home": "curtis-park", "source": "Airbnb",
-     "text": "Highly recommend this spot for a stay in the Denver area. It’s a quick, easy Uber ride to several hotspots, yet the neighborhood itself is just as enjoyable—perfect for relaxing and unwinding close to home or working remotely. Book now."},
-    {"name": "Jeannie", "from": "Albuquerque, New Mexico", "date": "October 2025", "home": "mountain-view", "source": "Airbnb",
-     "text": "I am so happy I chose this home! We were travelling with my 90 year old mother and were looking for ease and comfort. We found it here! Thank you for all the thoughtful touches!"}
+    {
+      "name": "Andrew",
+      "from": "Celina, Texas",
+      "date": "November 2026",
+      "home": "executive-lodo",
+      "source": "Airbnb",
+      "text": "A great place for a long business trip for myself and one of my coworkers. Very safe and secure. The instructions were spot on. Will likely be back.",
+      "photo": "assets/reviews/andrew.webp"
+    },
+    {
+      "name": "Melina",
+      "from": "",
+      "date": "April 2026",
+      "home": "curtis-park",
+      "source": "Airbnb",
+      "text": "This Airbnb was absolutely perfect from start to finish! The place was beautifully decorated, immaculate, and spotless—it truly felt like a boutique hotel. …",
+      "photo": "assets/reviews/melina.webp"
+    },
+    {
+      "name": "Steve",
+      "from": "Tumwater, Washington",
+      "date": "June 2026",
+      "home": "mountain-view",
+      "source": "Airbnb",
+      "text": "Very clean and comfortable place. Thoughtful amenities throughout especially kitchen and bathrooms. Private backyard with covered patio and fire pit great space for eating a meal or just hanging out. Would stay here again.",
+      "photo": "assets/reviews/steve.webp"
+    },
+    {
+      "name": "Matthew",
+      "from": "Albuquerque, New Mexico",
+      "date": "March 2024",
+      "home": "executive-lodo",
+      "source": "Airbnb",
+      "text": "This is a beautiful 19th floor apartment in a fantastic location. Beautifully appointed. Great shower, lovely beds, nice living room, kitchen that has everything. Lovely building, secure and safe. We loved staying here.",
+      "photo": "assets/reviews/matthew.webp"
+    },
+    {
+      "name": "Mary",
+      "from": "San Jose, California",
+      "date": "June 2026",
+      "home": "prime-downtown",
+      "source": "Airbnb",
+      "text": "My husband and I really enjoyed our stay here. This is such a great location. You are a 10 minute walk to Coors Field (Colorado Rockies) and 10 minute walk to Ball Arena (Denver Nuggets and Colorado Avalanche). …",
+      "photo": "assets/reviews/mary.webp"
+    },
+    {
+      "name": "Tawni",
+      "from": "Saint Charles, Missouri",
+      "date": "March 2026",
+      "home": "curtis-park",
+      "source": "Airbnb",
+      "text": "Highly recommend this spot for a stay in the Denver area. It’s a quick, easy Uber ride to several hotspots, yet the neighborhood itself is just as enjoyable—perfect for relaxing and unwinding close to home or working remotely. Book now.",
+      "photo": "assets/reviews/tawni.webp"
+    },
+    {
+      "name": "Jeannie",
+      "from": "Albuquerque, New Mexico",
+      "date": "October 2025",
+      "home": "mountain-view",
+      "source": "Airbnb",
+      "text": "I am so happy I chose this home! We were travelling with my 90 year old mother and were looking for ease and comfort. We found it here! Thank you for all the thoughtful touches!",
+      "photo": "assets/reviews/jeannie.webp"
+    }
   ]
 }
