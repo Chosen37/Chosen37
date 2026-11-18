@@ -468,3 +468,46 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
   .stat:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0;padding-top:20px;border-top:1px solid var(--line)}
   .stat:first-child{padding-left:0}
 }
+
+/* ---------- Statement over the city at night ---------- */
+.statement{position:relative;isolation:isolate;overflow:hidden;background:#0e1a17;padding-block:clamp(110px,14vw,210px);margin-top:clamp(48px,6vw,84px)}
+.statement-bg{position:absolute;inset:0;z-index:-2}
+.statement-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.statement::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#0e1a17eb 0%,#0e1a17b3 42%,#0e1a1733 100%),linear-gradient(180deg,#0e1a1780 0%,#0e1a1700 30%,#0e1a1700 70%,#0e1a1799 100%)}
+.statement-kicker{display:flex;align-items:center;gap:12px;margin:0 0 26px;font:700 12px/1.2 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light)}
+.statement-kicker::before{content:"";width:32px;height:1px;background:currentColor}
+.statement-text{color:#f8f7f3;max-width:1100px}
+.statement-text.is-split span[aria-hidden]{color:#f8f7f366}
+.statement-text.is-split span[aria-hidden].on{color:#fff}
+@media (max-width:700px){
+  .statement{padding-block:110px 120px}
+  .statement::before{background:linear-gradient(180deg,#0e1a17d9 0%,#0e1a17b8 60%,#0e1a17e6 100%)}
+}
+
+/* ---------- Owners: a cared-for home behind the opening ---------- */
+.owner-section{position:relative;isolation:isolate;overflow:hidden}
+.owner-bg{position:absolute;inset:0 0 auto;height:min(100%,980px);z-index:-2}
+.owner-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+.owner-section::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#17302ad1 0%,#17302ae6 360px,#17302a 980px)}
+.os-kicker{display:flex;align-items:center;gap:12px;margin:0 0 20px;font:700 12px/1.2 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light)}
+.os-kicker::before{content:"";width:32px;height:1px;background:currentColor}
+.os-pain{background:#0e1a1759;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#explore-rino>img{object-position:42% 55%}
+
+/* ---------- Booked in three steps: steps beside a home photo ---------- */
+.how-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:clamp(32px,5vw,80px);align-items:stretch}
+.how-layout .how-steps{grid-template-columns:1fr;gap:0}
+.how-layout .how-steps li{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(18px,2.4vw,32px);align-items:start;padding:22px 0;border-top:1px solid #13231f33}
+.how-layout .how-steps li:first-child{border-top:2px solid var(--ink)}
+.how-layout .how-num{grid-row:1/3;margin:0;font-size:clamp(44px,4vw,64px)}
+.how-layout .how-steps h3{margin:4px 0 6px}
+.how-layout .how-steps p{max-width:520px}
+.how-photo{position:relative;margin:0;border-radius:20px;overflow:hidden;min-height:420px;background:#e6e4dc}
+.how-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.how-photo figcaption{position:absolute;left:16px;bottom:16px;padding:7px 12px;border-radius:8px;background:#13231fcc;color:#f8f7f3;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media (max-width:900px){
+  .how-layout{grid-template-columns:1fr}
+  .how-photo{min-height:0;aspect-ratio:4/3;order:-1}
+}
+.how-layout .how-steps li{grid-template-columns:clamp(64px,6vw,92px) 1fr}
+.how-photo img{object-position:50% 80%}
