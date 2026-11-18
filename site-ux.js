@@ -44,18 +44,10 @@
     const mark = () => { interacted = true; evs.forEach(ev => removeEventListener(ev, mark, true)); if (onInteract) onInteract(); };
     evs.forEach(ev => addEventListener(ev, mark, { capture: true, passive: true }));
     const sizes = '(max-width: 900px) 100vw, 70vw';
-    // After the first photo (Curtis Park Gem), the homes rotate in this order.
-    const pair = path => [`${path}-640.webp 640w`, `${path}.webp 1440w`];
+    // After the first photo (Curtis Park Gem): the lobby, then the Mountain View living room.
     const sets = [
-      pair('assets/stays/mountain-view/40'),          // Mountain View, front lawn
-      [640, 1440].map(w => `assets/hero-slide-3-${w}.webp ${w}w`), // Curtis Park living room
-      ['assets/stay-lodo-640.webp 640w', 'assets/stay-lodo-800.webp 800w', 'assets/stay-lodo.webp 1200w'], // Executive LoDo
-      pair('assets/stays/mountain-view/32'),          // Mountain View backyard
-      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`), // Mountain View living room
-      pair('assets/stays/executive-lodo/26'),         // LoDo rooftop garden
-      [640, 1440].map(w => `assets/hero-slide-4-${w}.webp ${w}w`), // Prime Downtown living room
-      pair('assets/stays/curtis-park/06'),            // Curtis Park kitchen
-      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`) // Lobby
+      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`),
+      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`)
     ];
     const extra = sets.map(set => {
       const im = new Image();
@@ -73,7 +65,7 @@
       slides.forEach(s => s.classList.remove('is-prev'));
       cur.classList.remove('is-active'); cur.classList.add('is-prev');
       nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
-      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 1300);
+      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 1900);
       i = next;
     };
     const tick = () => {
@@ -84,7 +76,7 @@
     const run = () => {
       clearInterval(timer);
       const on = onScreen && !document.hidden;
-      timer = on ? setInterval(tick, 2500) : null;
+      timer = on ? setInterval(tick, 6000) : null;
     };
     const start = () => {
       heroBox.setAttribute('data-hero-ready', '');
