@@ -115,18 +115,23 @@ footer{background:#0f2a21}
   .mgmt-actions .button,.closing-actions .button{width:100%;justify-content:center}
 }
 
-/* Hero photo: slow, seamless push-in and ease-back loop (transform only, no layout cost) */
-.page-home .hero-image>img.hero-drift{object-position:50% 52%;transform-origin:55% 50%;animation:heroDrift 26s ease-in-out infinite alternate;will-change:transform}
-@keyframes heroDrift{from{transform:scale(1)}to{transform:scale(1.09) translate(-1.2%,-.6%)}}
+/* Hero slideshow: photos crossfade while each one slowly pushes in (opacity + transform only) */
 .page-home .hero-image{overflow:hidden}
+.page-home .hero-image>img.hero-slide{object-position:50% 52%;transform-origin:55% 50%;opacity:0;transition:opacity 1.8s ease-in-out;z-index:1}
+.page-home .hero-image>img.hero-slide.is-active{opacity:1;z-index:2}
+.page-home .hero-image>img.hero-drift{opacity:1}
+.page-home .hero-image>img.hero-slide.is-zoom{animation:heroPush 9s ease-out forwards;will-change:transform}
+@keyframes heroPush{from{transform:scale(1)}to{transform:scale(1.08) translate(-1%,-.5%)}}
+.page-home .hero-image[data-hero-ready]>img.hero-drift:not(.is-active){opacity:0}
+.page-home .hero-image>img.hero-slide.is-prev{opacity:1;z-index:1}
 /* Softer, wider blend into the cream on larger screens */
 @media (min-width:901px){
   .page-home .hero-image:after{background:linear-gradient(90deg,#faf5eb 0%,#faf5eb 3%,#faf5ebd9 12%,#faf5eb80 24%,#faf5eb26 36%,transparent 48%)}
 }
 @media (max-width:900px){
-  .page-home .hero-image>img.hero-drift{object-position:50% 50%}
+  .page-home .hero-image>img.hero-slide{object-position:50% 50%}
 }
-@media (prefers-reduced-motion:reduce){.page-home .hero-image>img.hero-drift{animation:none}}
+@media (prefers-reduced-motion:reduce){.page-home .hero-image>img.hero-slide{animation:none!important;transition:none}}
 
 /* ===== 3. Smooth crossfade between pages (browsers that support it; no script) ===== */
 @view-transition{navigation:auto}

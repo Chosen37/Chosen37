@@ -32,6 +32,51 @@
     }
   });
 
+  // ---- Homepage hero: crossfade through more photos after the page has loaded ----
+  const heroBox = document.querySelector('[data-hero-slides]');
+  if (heroBox && !reduce) {
+    const sizes = '(max-width: 900px) 100vw, 70vw';
+    const extra = [1, 2, 3, 4].map(n => {
+      const im = new Image();
+      im.className = 'hero-slide';
+      im.alt = ''; im.setAttribute('aria-hidden', 'true');
+      im.decoding = 'async'; im.width = 1440; im.height = 957;
+      im.dataset.srcset = [640, 960, 1440].map(w => `assets/hero-slide-${n}-${w}.webp ${w}w`).join(', ');
+      return im;
+    });
+    const slides = [heroBox.querySelector('img'), ...extra];
+    const ready = new Set([0]);
+    let i = 0, timer = null, onScreen = true;
+    const show = next => {
+      const cur = slides[i], nxt = slides[next];
+      slides.forEach(s => s.classList.remove('is-prev'));
+      cur.classList.remove('is-active'); cur.classList.add('is-prev');
+      nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
+      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 2000);
+      i = next;
+    };
+    const tick = () => {
+      let next = (i + 1) % slides.length;
+      while (!ready.has(next) && next !== i) next = (next + 1) % slides.length;
+      if (next !== i) show(next);
+    };
+    const run = () => { clearInterval(timer); timer = (onScreen && !document.hidden) ? setInterval(tick, 6500) : null; };
+    const start = () => {
+      heroBox.setAttribute('data-hero-ready', '');
+      extra.forEach((im, k) => {
+        im.onload = () => ready.add(k + 1);
+        im.sizes = sizes; im.srcset = im.dataset.srcset;
+        heroBox.appendChild(im);
+      });
+      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
+      document.addEventListener('visibilitychange', run);
+      run();
+    };
+    // Wait until the page has fully loaded so the extra photos never compete with it.
+    const later = () => idle(start, { timeout: 2500 });
+    if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
+  }
+
   // ---- Listing cards: show the home's second photo on hover (mouse only) ----
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.querySelectorAll('.property-photo[data-alt-src]').forEach(link => {
