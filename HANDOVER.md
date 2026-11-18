@@ -17,6 +17,9 @@ A fast static website (plain HTML, CSS and a little JavaScript), hosted free on 
 
 **Keep calendars in sync by hand** until a booking system is connected. When you confirm a direct booking, block those dates on Airbnb straight away.
 
+## Owner proposal requests
+The **Request my proposal** form on the For property owners page (`management.html#owner-inquiry`) sends the owner's property details and contact information to the same inbox, with the subject "Property management proposal request". Reply with your recommended plan, what is included, and the fee in writing.
+
 ## Changing listing content
 All property details live in `data/properties.json`. After editing it, run:
 

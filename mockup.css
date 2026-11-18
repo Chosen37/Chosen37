@@ -104,3 +104,13 @@ footer{background:#0f2a21}
 
 /* Long home names (e.g. "Prime Downtown Denver") wrap instead of being clipped */
 .property-copy h3{white-space:normal;text-wrap:balance;overflow-wrap:break-word}
+
+/* Two calls to action side by side (management hero, booking page close) */
+.mgmt-actions,.closing-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+.closing-actions{margin-top:0}
+.owner-request{background:#fffdf8;border:1px solid #e3d9c6;border-radius:17px;padding:clamp(18px,2.4vw,28px);box-shadow:0 8px 24px #2a1f0b14}
+.mgmt-actions .button{flex:0 1 auto}
+@media (max-width:520px){
+  .mgmt-actions,.closing-actions{flex-direction:column;align-items:stretch}
+  .mgmt-actions .button,.closing-actions .button{width:100%;justify-content:center}
+}

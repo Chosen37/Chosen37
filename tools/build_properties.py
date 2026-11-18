@@ -230,8 +230,8 @@ def booking_panel(p):
             + f'</select></label>'
             f'<label for="rq-name-{p["id"]}">Full name<input id="rq-name-{p["id"]}" name="Name" autocomplete="name" required maxlength="100"></label>'
             f'<label for="rq-email-{p["id"]}">Email<input id="rq-email-{p["id"]}" name="email" type="email" autocomplete="email" required maxlength="150"></label>'
-            f'<label for="rq-phone-{p["id"]}">Phone <span class="optional">(optional)</span><input id="rq-phone-{p["id"]}" name="Phone" type="tel" autocomplete="tel" maxlength="40"></label>'
-            f'<label for="rq-msg-{p["id"]}">Message <span class="optional">(optional)</span><textarea id="rq-msg-{p["id"]}" name="Message" rows="3" maxlength="2000" placeholder="Reason for your stay, arrival time, pets, or questions"></textarea></label>'
+            f'<label for="rq-phone-{p["id"]}"><span>Phone <span class="optional">(optional)</span></span><input id="rq-phone-{p["id"]}" name="Phone" type="tel" autocomplete="tel" maxlength="40"></label>'
+            f'<label for="rq-msg-{p["id"]}"><span>Message <span class="optional">(optional)</span></span><textarea id="rq-msg-{p["id"]}" name="Message" rows="3" maxlength="2000" placeholder="Reason for your stay, arrival time, pets, or questions"></textarea></label>'
             f'<label class="rq-consent" for="rq-ok-{p["id"]}"><input id="rq-ok-{p["id"]}" type="checkbox" name="Acknowledged" value="Yes" required>'
             f'<span>I understand this is a request, not a confirmed reservation, and that no payment is taken now. See our <a href="privacy.html">Privacy Policy</a>.</span></label>'
             f'<p class="rq-error" data-request-error role="alert" hidden></p>'
@@ -334,6 +334,15 @@ sent_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap requ
              '<p>Need an answer sooner? Call <a href="tel:+17208282021">(720) 828-2021</a>.</p>'
              '<a class="button button-gold" href="stays.html">Back to the stays</a></section></main>')
 (ROOT / "request-sent.html").write_text(sent_head + sent_main + foot)
+
+prop_head = re.sub(r"<title>.*?</title>", "<title>Proposal requested | Vail Breeze Properties</title>", sent_head, count=1)
+prop_head = re.sub(r'(<meta name="description" content=")[^"]*', lambda m: m.group(1) + "Your property-management proposal request has been sent to Vail Breeze Properties.", prop_head, count=1)
+prop_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap request-sent"><span class="eyebrow">Property management</span>'
+             '<h1>Request received.<br><em>Thank you.</em></h1>'
+             '<p>Your property details are with Vail Breeze. We will review them and reply by email with a proposal: the plan we recommend, what is included, and the fee in writing.</p>'
+             '<p>Want to talk sooner? Call <a href="tel:+17208282021">(720) 828-2021</a>.</p>'
+             '<p><a class="button button-gold" href="management.html#management-plans">Back to the plans</a> <a class="button button-outline" href="stays.html">See our homes</a></p></section></main>')
+(ROOT / "proposal-sent.html").write_text(prop_head + prop_main + foot)
 
 nf_head = re.sub(r"<title>.*?</title>", "<title>Page not found | Vail Breeze Properties</title>", sent_head, count=1)
 nf_head = re.sub(r'(<meta name="description" content=")[^"]*', lambda m: m.group(1) + "This page could not be found.", nf_head, count=1)
