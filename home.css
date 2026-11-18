@@ -403,3 +403,11 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
   .dest-credit{opacity:1}
 }
 @media (prefers-reduced-motion:reduce){.dest>img{transition:none}}
+
+/* ---------- Hero film: still first frame, then the looping film fades in ---------- */
+.page-home .hero-image>img.hero-poster{opacity:1;object-position:50% 50%}
+.page-home .hero-image>.hero-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:1;opacity:0;transition:opacity 1.2s ease}
+.page-home .hero-image.film-on>.hero-film{opacity:1}
+@media (max-width:900px){.page-home .hero-image>img.hero-poster,.page-home .hero-image>.hero-film{object-position:50% 50%}}
+.rv-ready .dest.rv>img{transform:scale(1.1)}.rv-ready .dest.rv.in>img{transform:none}
+#explore-rockies>img{object-position:50% 38%}

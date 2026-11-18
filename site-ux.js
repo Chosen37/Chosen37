@@ -10,10 +10,10 @@
       'main .section-heading, main .property-card, main .plan-card, main .review-layout, main .plan-note,' +
       ' main .trust-grid > *, main .date-search, main .page-intro, main .steps > li, main .accordion,' +
       ' main .property-body > section, main .stack .card, main .legal-content > section, main .owner-checklist, main .closing,' +
-      ' main .stat, main .how-steps > li, main .hood, main .cc-copy, main .collection-more'
+      ' main .stat, main .how-steps > li, main .hood, main .cc-copy, main .collection-more, main .dest, main .os-col, main .os-benefits > div, main .hero-path'
     )].filter(el => !el.closest('.hero, dialog'))
       // Sideways rows on smaller screens scroll horizontally, so their items don't animate in.
-      .filter(el => !(el.matches('.property-card') && el.closest('.page-home') && innerWidth <= 700) && !(el.matches('.hood') && innerWidth <= 1100));
+      .filter(el => !(el.matches('.property-card') && el.closest('.page-home') && innerWidth <= 700) && !(el.matches('.hood') && innerWidth <= 1100) && !(el.matches('.dest') && innerWidth <= 700));
     const vh = innerHeight;
     // Anything already on screen stays put; only content below the fold animates in.
     const below = targets.filter(el => el.getBoundingClientRect().top > vh * 0.92);
@@ -35,73 +35,40 @@
     }
   });
 
-  // ---- Homepage hero: crossfade through more photos after the page has loaded ----
-  const heroBox = document.querySelector('[data-hero-slides]');
-  if (heroBox && !reduce) {
-    // Note the visitor's first interaction from the start, so rotation can begin right away.
+  // ---- Homepage hero: looping film over a still first frame ----
+  // The still (the film's first frame) is the page's main image and loads with it.
+  // The film loads only after the page has finished and the visitor interacts
+  // (or after 4 seconds), then fades in once it is actually playing.
+  const heroBox = document.querySelector('[data-hero-video]');
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (heroBox && !reduce && !saveData) {
     const evs = ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'];
-    let interacted = false, onInteract = null;
-    const mark = () => { interacted = true; evs.forEach(ev => removeEventListener(ev, mark, true)); if (onInteract) onInteract(); };
-    evs.forEach(ev => addEventListener(ev, mark, { capture: true, passive: true }));
-    const sizes = '(max-width: 900px) 100vw, 70vw';
-    // After the first photo (Curtis Park Gem): the lobby, then the Mountain View living room.
-    const sets = [
-      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`),
-      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`)
-    ];
-    const extra = sets.map(set => {
-      const im = new Image();
-      im.className = 'hero-slide';
-      im.alt = ''; im.setAttribute('aria-hidden', 'true');
-      im.decoding = 'async'; im.width = 1440; im.height = 957;
-      im.dataset.srcset = set.join(', ');
-      return im;
-    });
-    const slides = [heroBox.querySelector('img'), ...extra];
-    const ready = new Set([0]);
-    let i = 0, timer = null, onScreen = true;
-    const show = next => {
-      const cur = slides[i], nxt = slides[next];
-      slides.forEach(s => s.classList.remove('is-prev'));
-      cur.classList.remove('is-active'); cur.classList.add('is-prev');
-      nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
-      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 1900);
-      i = next;
-    };
-    const tick = () => {
-      let next = (i + 1) % slides.length;
-      while (!ready.has(next) && next !== i) next = (next + 1) % slides.length;
-      if (next !== i) show(next);
-    };
-    const run = () => {
-      clearInterval(timer);
-      const on = onScreen && !document.hidden;
-      timer = on ? setInterval(tick, 6000) : null;
-    };
+    let loaded = false, started = false;
     const start = () => {
-      heroBox.setAttribute('data-hero-ready', '');
-      // Load the photos one after another so they never compete with each other.
-      const loadNext = k => {
-        const im = extra[k];
-        if (!im) return;
-        im.onload = im.onerror = () => { if (im.naturalWidth) ready.add(k + 1); loadNext(k + 1); };
-        im.sizes = sizes; im.srcset = im.dataset.srcset;
-        heroBox.appendChild(im);
-      };
-      loadNext(0);
-      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
-      document.addEventListener('visibilitychange', run);
-      run();
+      if (started || !loaded) return;
+      started = true;
+      evs.forEach(ev => removeEventListener(ev, start, true));
+      const v = document.createElement('video');
+      v.className = 'hero-film';
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+      v.preload = 'auto';
+      v.src = innerWidth * (devicePixelRatio || 1) > 1100 && innerWidth > 900 ? 'assets/hero-1280.mp4' : 'assets/hero-768.mp4';
+      v.addEventListener('playing', () => heroBox.classList.add('film-on'), { once: true });
+      heroBox.appendChild(v);
+      let onScreen = true;
+      const sync = () => { if (onScreen && !document.hidden) v.play().catch(() => {}); else v.pause(); };
+      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }).observe(heroBox);
+      document.addEventListener('visibilitychange', sync);
+      sync();
     };
-    // The other photos load and rotate only once the page has loaded and the visitor has
-    // interacted (or after 12 seconds), so they never slow the first view or count as it.
-    let loaded = false, go = false;
-    const begin = () => { if (go || !loaded) return; go = true; idle(start, { timeout: 1500 }); };
-    const later = () => {
-      loaded = true;
-      if (interacted) begin(); else { onInteract = begin; setTimeout(begin, 12000); }
-    };
-    if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
+    const later = () => { loaded = true; idle(start, { timeout: 1500 }); };
+    evs.forEach(ev => addEventListener(ev, () => { if (loaded) start(); }, { capture: true, passive: true, once: true }));
+    const arm = () => setTimeout(later, 4000);
+    if (document.readyState === 'complete') arm(); else addEventListener('load', () => {
+      arm();
+      evs.forEach(ev => addEventListener(ev, later, { capture: true, passive: true, once: true }));
+    }, { once: true });
   }
 
   // ---- Statement: words brighten one by one as the line scrolls through the screen ----

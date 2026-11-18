@@ -1,0 +1,155 @@
+{
+  "_readme": "Explore Colorado destinations on the homepage. Photos are from Wikimedia Commons under the licenses shown; keep each credit with its photo. Run tools/build_properties.py after editing.",
+  "destinations": [
+    {
+      "id": "union-station",
+      "size": "d-7 d-tall",
+      "area": "LoDo · Downtown Denver",
+      "name": "Union Station",
+      "text": "Denver’s restored 1914 rail hall is the city’s living room: a Great Hall to linger in, coffee by day, cocktails by night, and trains to the airport and beyond.",
+      "alt": "Denver Union Station lit up for the holidays at dusk, with its neon Travel by Train sign",
+      "stay": "executive-lodo",
+      "credit": {
+        "by": "Isaac Kim",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Denver_Union_Station_During_the_Holidays,_2014.jpg"
+      },
+      "img": "assets/explore/union-station"
+    },
+    {
+      "id": "larimer-square",
+      "size": "d-5 d-tall",
+      "area": "Downtown Denver",
+      "name": "Larimer Square",
+      "text": "Denver’s most historic block, strung with lights and Colorado flags and lined with Victorian storefronts, chef-driven restaurants and patio dining.",
+      "alt": "Larimer Square in Denver, a historic red-brick block hung with Colorado flags and string lights",
+      "stay": "executive-lodo",
+      "credit": {
+        "by": "Sdkb",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Larimer_Square,_Denver_2.jpg"
+      },
+      "img": "assets/explore/larimer-square"
+    },
+    {
+      "id": "lodo",
+      "size": "d-4",
+      "area": "Lower Downtown",
+      "name": "LoDo",
+      "text": "Red-brick warehouses reborn as breweries, galleries and restaurants. Wynkoop Brewing, Colorado’s first brewpub, anchors the neighborhood.",
+      "alt": "Wynkoop Brewing Company in a red-brick warehouse building in Lower Downtown Denver",
+      "stay": "executive-lodo",
+      "credit": {
+        "by": "Jeffrey Beall",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wynkoop.JPG"
+      },
+      "img": "assets/explore/lodo"
+    },
+    {
+      "id": "sixteenth-street",
+      "size": "d-4",
+      "area": "Downtown Denver",
+      "name": "16th Street",
+      "text": "A tree-lined pedestrian promenade through the heart of downtown, with shops, patios and street life from Union Station toward Civic Center.",
+      "alt": "Pedestrians on the tree-lined 16th Street Mall in downtown Denver on a summer day",
+      "stay": "prime-downtown",
+      "credit": {
+        "by": "Luis Toro",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:16th_Street_Mall_August_2008_(2803788634).jpg"
+      },
+      "img": "assets/explore/sixteenth-street"
+    },
+    {
+      "id": "coors-field",
+      "size": "d-4",
+      "area": "Ballpark District",
+      "name": "Coors Field",
+      "text": "Home of the Colorado Rockies. Catch a summer night game, then walk out into the bars and restaurants of the Ballpark neighborhood.",
+      "alt": "Coors Field in Denver lit up during a Colorado Rockies night game",
+      "stay": "prime-downtown",
+      "credit": {
+        "by": "Thelastcanadian",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Coors_Field_2015.jpg"
+      },
+      "img": "assets/explore/coors-field"
+    },
+    {
+      "id": "rino",
+      "size": "d-6",
+      "area": "River North",
+      "name": "RiNo Art District",
+      "text": "Murals on nearly every block, converted warehouses, food halls and breweries in Denver’s most creative neighborhood.",
+      "alt": "Painted Sugar Machine building in the River North Art District in Denver",
+      "stay": "curtis-park",
+      "credit": {
+        "by": "Pelajanela",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Sugar_Machine._Denver,_Colorado.jpg"
+      },
+      "img": "assets/explore/rino"
+    },
+    {
+      "id": "highlands",
+      "size": "d-6",
+      "area": "Northwest Denver",
+      "name": "The Highlands",
+      "text": "Cross the Highland Bridge from downtown to Victorian streets, rooftop restaurants and some of the best skyline views in the city.",
+      "alt": "People crossing the Highland Bridge pedestrian bridge toward the Denver skyline at dusk",
+      "stay": null,
+      "credit": {
+        "by": "Jesse James",
+        "license": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Highland_Bridge,_Denver_(55028556586).jpg"
+      },
+      "img": "assets/explore/highlands"
+    },
+    {
+      "id": "cherry-creek",
+      "size": "d-5",
+      "area": "Cherry Creek",
+      "name": "Cherry Creek",
+      "text": "Denver’s polished shopping and dining district, with boutiques, galleries and the summer Cherry Creek Arts Festival.",
+      "alt": "Crowds walking among tents at the Cherry Creek Arts Festival in Denver",
+      "stay": null,
+      "credit": {
+        "by": "InSapphoWeTrust",
+        "license": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Cherry_Creek_Arts_Festival,_Denver_(6067733323).jpg"
+      },
+      "img": "assets/explore/cherry-creek"
+    },
+    {
+      "id": "red-rocks",
+      "size": "d-7",
+      "area": "Morrison · Foothills",
+      "name": "Red Rocks Amphitheatre",
+      "text": "A world-famous open-air venue set between towering sandstone monoliths in the foothills west of Denver. Come for a concert, stay for the sunset.",
+      "alt": "Red Rocks Amphitheatre seating between giant red sandstone rocks under a blue Colorado sky",
+      "stay": null,
+      "credit": {
+        "by": "Sarbjit Bahga",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Red_Rocks_Amphitheatre,_Colorado_3.jpg"
+      },
+      "img": "assets/explore/red-rocks"
+    },
+    {
+      "id": "rockies",
+      "size": "d-12",
+      "area": "The Front Range",
+      "name": "The Rockies on the horizon",
+      "text": "Denver sits at the edge of the Front Range, so mountain trails, ski towns and scenic drives make easy day trips from a furnished home in the city.",
+      "alt": "Downtown Denver skyline with the snow-capped Rocky Mountains on the horizon",
+      "stay": "mountain-view",
+      "credit": {
+        "by": "Carol M. Highsmith, Library of Congress",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Skyline,_Denver,_Colorado_LCCN2011636031.tif"
+      },
+      "img": "assets/explore/rockies"
+    }
+  ]
+}

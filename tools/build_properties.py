@@ -114,9 +114,48 @@ def relink_cards(path):
         # numbers band and review heading on the homepage
         t = re.sub(r'(data-stat="avg">)[^<]*', lambda m: m.group(1) + f"{avg:.2f}", t)
         t = re.sub(r'(data-stat="count">)[^<]*', lambda m: m.group(1) + str(n), t)
+    if "<!--explore-->" in t:
+        t = re.sub(r"<!--explore-->.*?<!--/explore-->", lambda m: "<!--explore-->" + explore_html() + "<!--/explore-->", t, flags=re.S)
     if "<!--reviews-->" in t:
         t = re.sub(r"<!--reviews-->.*?<!--/reviews-->", lambda m: "<!--reviews-->" + reviews_html() + "<!--/reviews-->", t, flags=re.S)
     path.write_text(t)
+
+
+LICENSE_URLS = {
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-SA 3.0": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "CC BY-SA 2.0": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY 2.0": "https://creativecommons.org/licenses/by/2.0/",
+}
+
+
+def explore_html():
+    """Explore Colorado destination cards for the homepage, from data/explore.json."""
+    src = ROOT / "data" / "explore.json"
+    if not src.exists():
+        return ""
+    by_id = {p["id"]: p for p in PROPS}
+    arrow = ('<svg class="arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5" '
+             'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    out = []
+    for x in json.loads(src.read_text())["destinations"]:
+        wide = "d-12" in x["size"]
+        small, big = (768, 1600) if wide else (640, 1280)
+        sizes = "(max-width: 700px) 82vw, 100vw" if wide else "(max-width: 700px) 82vw, (max-width: 1100px) 50vw, 46vw"
+        img = (f'<img src="{x["img"]}-{big}.webp" srcset="{x["img"]}-{small}.webp {small}w, {x["img"]}-{big}.webp {big}w" '
+               f'sizes="{sizes}" alt="{E(x["alt"])}" loading="lazy" fetchpriority="low" decoding="async">')
+        home = by_id.get(x.get("stay") or "")
+        link = (f'<a class="dest-stay" href="{home["page"]}">Stay nearby: {E(home["name"])}{arrow}</a>' if home
+                else f'<a class="dest-stay" href="stays.html">Browse furnished stays{arrow}</a>')
+        c = x["credit"]
+        lic = c["license"]
+        lic_html = f'<a href="{LICENSE_URLS[lic]}" rel="license noopener" target="_blank">{E(lic)}</a>' if lic in LICENSE_URLS else E(lic)
+        credit = (f'<p class="dest-credit">Photo: <a href="{E(c["source"])}" rel="noopener" target="_blank">{E(c["by"])}</a>, {lic_html}</p>')
+        out.append(f'<article class="dest {x["size"]}" id="explore-{x["id"]}">{img}{credit}'
+                   f'<div class="dest-copy"><p class="dest-area">{E(x["area"])}</p><h3>{E(x["name"])}</h3>'
+                   f'<p>{E(x["text"], quote=False)}</p>{link}</div></article>')
+    return "".join(out)
 
 
 def reviews_html():
