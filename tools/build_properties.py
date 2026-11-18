@@ -80,7 +80,7 @@ def relink_cards(path):
         b = re.sub(rf'<h3>(?:<a class="card-title-link" href="[^"]*">)?{re.escape(E(name, quote=False))}(?:</a>)?</h3>',
                    f'<h3><a class="card-title-link" href="{page}">{E(name, quote=False)}</a></h3>', b, count=1)
         b = re.sub(r'<a class="button button-gold booking-link" href="[^"]*"[^>]*>.*?</a>',
-                   f'<a class="button button-gold booking-link" href="{page}#book" aria-label="View &amp; book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
+                   f'<a class="button button-gold booking-link" href="{page}" aria-label="View &amp; book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
         t = t.replace(a, b)
     path.write_text(t)
 
@@ -187,15 +187,26 @@ def gallery_html(p):
 
 
 def viewer_html(p):
-    thumbs = "".join(
-        f'<button type="button" data-viewer-thumb aria-label="Show photo {i + 1}"><img data-src="{x["src640"]}" alt="" decoding="async"></button>'
-        for i, x in enumerate(p["photos"]))
+    """Photo tour: a scrolling grid of every photo, plus an enlarged single view."""
+    n = len(p["photos"])
+    items = []
+    for i, x in enumerate(p["photos"]):
+        room = x["alt"].split(" \u2014 ", 1)[-1] if " \u2014 " in x["alt"] else ""
+        items.append(
+            f'<figure class="pv-item"><button type="button" class="pv-open" data-pv-open="{i}" aria-label="Enlarge photo {i + 1} of {n}">'
+            f'<img src="{x["src640"]}" srcset="{x["src640"]} 640w, {x["src"]} {x["width"]}w" sizes="(max-width: 700px) 100vw, 560px" '
+            f'alt="{E(x["alt"])}" width="{x["width"]}" height="{x["height"]}" loading="lazy" decoding="async"></button>'
+            + (f'<figcaption>{E(room)}</figcaption>' if room else '') + '</figure>')
     return (f'<dialog class="photo-viewer" id="photo-viewer" aria-label="{E(p["name"])} photos">'
-            f'<div class="viewer-bar"><p><strong>{E(p["name"])}</strong><span class="viewer-count" data-viewer-count></span></p>'
-            f'<button type="button" class="viewer-close" data-viewer-close data-close aria-label="Close photos">×</button></div>'
-            f'<div class="viewer-stage" data-viewer-stage><button type="button" class="viewer-nav viewer-prev" data-viewer-prev aria-label="Previous photo">‹</button>'
-            f'<img data-viewer-img src="" alt=""><button type="button" class="viewer-nav viewer-next" data-viewer-next aria-label="Next photo">›</button></div>'
-            f'<div class="viewer-thumbs">{thumbs if len(p["photos"]) > 1 else ""}</div></dialog>')
+            f'<div class="pv-bar"><button type="button" class="pv-back" data-pv-back hidden>\u2190 All photos</button>'
+            f'<p class="pv-title"><strong>{E(p["name"])}</strong><span data-pv-count>{n} photos</span></p>'
+            f'<button type="button" class="viewer-close" data-viewer-close data-close aria-label="Close photos">\u00d7</button></div>'
+            f'<div class="pv-grid" data-pv-grid>{"".join(items)}</div>'
+            f'<div class="pv-single" data-pv-single hidden>'
+            f'<button type="button" class="pv-nav pv-prev" data-pv-prev aria-label="Previous photo">\u2039</button>'
+            f'<figure class="pv-stage" data-pv-stage><img data-pv-img src="" alt=""><figcaption data-pv-cap></figcaption></figure>'
+            f'<button type="button" class="pv-nav pv-next" data-pv-next aria-label="Next photo">\u203a</button></div>'
+            f'</dialog>')
 
 
 REQUEST_ENDPOINT = "https://formsubmit.co/vailbreezeproperties@gmail.com"
@@ -379,4 +390,10 @@ lines += ["## Not yet on the site", ""]
 for s in DATA.get("pendingSources", []):
     lines.append(f"- {s['platform']}: {s['url']} — {s['status']}")
 (ROOT / "PROPERTY-COMPLETENESS.md").write_text("\n".join(lines) + "\n")
+# ---------- 6. links to other pages open at the top (no #section jumps) ----------
+_xlink = re.compile(r'href="([a-z0-9-]+\.html)(\?[^"#]*)?#[^"]*"')
+for _page in [p["page"] for p in PROPS] + ["request-sent.html", "proposal-sent.html", "404.html"]:
+    _path = ROOT / _page
+    _html = _path.read_text()
+    _path.write_text(_xlink.sub(lambda m: m.group(0) if m.group(1) == _page else f'href="{m.group(1)}{m.group(2) or ""}"', _html))
 print(f"Built {len(PROPS)} property pages.")
