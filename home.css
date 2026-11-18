@@ -511,3 +511,17 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
 }
 .how-layout .how-steps li{grid-template-columns:clamp(64px,6vw,92px) 1fr}
 .how-photo img{object-position:50% 80%}
+
+/* Plan cards without rates: the plan name is the title */
+.plan-card h3{padding-bottom:14px}
+.plan-card .plan-name{font:400 clamp(30px,2.6vw,40px)/1.05 var(--serif);letter-spacing:-.035em;margin-top:6px;color:var(--ink)}
+.plan-card{padding-top:30px}
+
+/* Management plans as a simple list (no cards) */
+.plan-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,48px)}
+.plan-list li{padding-top:22px;border-top:2px solid var(--ink)}
+.plan-list h3{margin:0 0 10px;font:400 clamp(28px,2.4vw,38px)/1.05 var(--serif);letter-spacing:-.035em}
+.plan-list p{margin:0 0 16px;font-size:17px;line-height:1.55;color:var(--muted);max-width:360px}
+.plan-list .link-arrow{font-size:16px}
+@media (max-width:800px){.plan-list{grid-template-columns:1fr;gap:28px}}
+.os-cta{margin-bottom:0}
