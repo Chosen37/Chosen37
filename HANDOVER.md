@@ -22,7 +22,9 @@ All property details live in `data/properties.json`. After editing it, run:
 
     python3 tools/build_properties.py
 
-That rebuilds the five property pages, the sitemap and `PROPERTY-COMPLETENESS.md`. Leave a field empty (`null`) rather than guessing; empty fields are hidden on the site.
+That rebuilds the five property pages, the sitemap and `PROPERTY-COMPLETENESS.md`.
+
+**Styles:** edit `styles.css`, `mockup.css`, `legal.css`, `property.css` or `fonts.css`, then run `python3 tools/build_css.py`. It combines them into the single `site.css` that every page loads, which keeps phones fast. `build_properties.py` runs it as well. Leave a field empty (`null`) rather than guessing; empty fields are hidden on the site.
 
 Property photos are in `assets/stays/<property-id>/`, in the same order as the Airbnb listing.
 
