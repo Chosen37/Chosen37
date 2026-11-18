@@ -55,3 +55,6 @@ footer{background:#0f2a21}
 @media (max-width:1400px){.footer-contact>span,.footer-contact>a{font-size:14px}}
 .card-title-link{color:inherit;text-decoration:none}
 .card-title-link:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.page-home .plan-badge{background:#8c6115;border-color:#8c6115;color:#fffaf0}
+/* Reserve the filter bar's space before scripts reveal it (prevents a layout jump). */
+#stay-filters[hidden]{display:grid!important;visibility:hidden}

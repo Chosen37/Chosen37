@@ -75,7 +75,7 @@ def relink_cards(path):
         b = re.sub(rf'<h3>(?:<a class="card-title-link" href="[^"]*">)?{re.escape(E(name, quote=False))}(?:</a>)?</h3>',
                    f'<h3><a class="card-title-link" href="{page}">{E(name, quote=False)}</a></h3>', b, count=1)
         b = re.sub(r'<a class="button button-gold booking-link" href="[^"]*"[^>]*>.*?</a>',
-                   f'<a class="button button-gold booking-link" href="{page}#book" aria-label="View and book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
+                   f'<a class="button button-gold booking-link" href="{page}#book" aria-label="View &amp; book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
         t = t.replace(a, b)
     path.write_text(t)
 
@@ -94,7 +94,7 @@ cards = {p["id"]: m.group(0) for p in PROPS
 
 def page_head(p):
     h = head
-    title = f"{p['name']} · {p['location']} | Vail Breeze Properties"
+    title = f"{p['name']}: Furnished Stay in {p['city']} | Vail Breeze"
     desc = f"{p['name']}: {p['type'].lower()} in {p['location'].replace(' · ', ', ')} for up to {p['guests']} guests. {p['description']}"
     url = f"{SITE}/{p['page']}"
     img = f"{SITE}/{p['photos'][0]['src']}"
@@ -116,7 +116,31 @@ def page_head(p):
         origin = "{u.scheme}://{u.netloc}".format(u=urlparse(p["directBooking"]["bookingUrl"]))
         h = h.replace("object-src 'none';", f"object-src 'none'; frame-src {origin};")
     h = re.sub(r'<body class="[^"]*"', '<body class="page-property"', h, count=1)
+    h = h.replace("</head>", jsonld(p) + "</head>", 1)
     return h
+
+
+def jsonld(p):
+    d = p["details"]
+    url = f"{SITE}/{p['page']}"
+    amen = [a for g in (d.get("amenitiesComplete") or []) for a in g["items"]]
+    data = [{
+        "@context": "https://schema.org", "@type": "VacationRental", "@id": url + "#rental",
+        "name": p["name"], "description": p["description"], "url": url,
+        "image": [f"{SITE}/{x['src']}" for x in p["photos"][:8]],
+        "address": {"@type": "PostalAddress", "addressLocality": p["city"], "addressRegion": "CO", "addressCountry": "US"},
+        "containsPlace": {"@type": "Accommodation", "additionalType": p["type"],
+                          "occupancy": {"@type": "QuantitativeValue", "maxValue": p["guests"]},
+                          "numberOfBedrooms": p["bedrooms"], "numberOfBathroomsTotal": p["baths"],
+                          "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": a.split(" — ")[0], "value": True} for a in amen[:30]]},
+        "petsAllowed": bool(d.get("pets") and d["pets"].startswith("Pets allowed")),
+        "provider": {"@type": "Organization", "name": "Vail Breeze Properties", "url": SITE + "/", "telephone": "+1-720-828-2021"},
+    }, {
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Furnished stays", "item": f"{SITE}/stays.html"},
+            {"@type": "ListItem", "position": 2, "name": p["name"], "item": url}]}]
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
 def gallery_html(p):
@@ -197,7 +221,6 @@ def booking_panel(p):
             f'</form>'
             f'<p class="sync-note">We confirm your dates, nightly rate, cleaning fee, and taxes in our reply, along with secure payment instructions. '
             f'Your stay is booked only once you accept and pay.</p>'
-            f'<p class="rq-alt">Prefer to book instantly? <a href="{p["url"]}" target="_blank" rel="noopener noreferrer">Book on Airbnb</a></p>'
             f'{contact}</aside>')
 
 
@@ -283,6 +306,8 @@ for i, p in enumerate(PROPS):
 sent_head = re.sub(r"<title>.*?</title>", "<title>Request sent | Vail Breeze Properties</title>", head, count=1)
 sent_head = re.sub(r'<body class="[^"]*"', '<body class="page-property"', sent_head, count=1)
 sent_head = sent_head.replace('<meta name="viewport"', '<meta name="robots" content="noindex"><meta name="viewport"', 1)
+sent_head = re.sub(r'<link rel="canonical" href="[^"]*">', '', sent_head, count=1)
+sent_head = re.sub(r'(<meta name="description" content=")[^"]*', lambda m: m.group(1) + "Your booking request has been sent to Vail Breeze Properties.", sent_head, count=1)
 sent_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap request-sent"><span class="eyebrow">Booking request</span>'
              '<h1>Request sent.<br><em>Thank you.</em></h1>'
              '<p>Your request is with Vail Breeze. We will reply by email to confirm availability, your total price, and how to pay securely. '
@@ -290,6 +315,14 @@ sent_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap requ
              '<p>Need an answer sooner? Call <a href="tel:+17208282021">(720) 828-2021</a>.</p>'
              '<a class="button button-gold" href="stays.html">Back to the stays</a></section></main>')
 (ROOT / "request-sent.html").write_text(sent_head + sent_main + foot)
+
+nf_head = re.sub(r"<title>.*?</title>", "<title>Page not found | Vail Breeze Properties</title>", sent_head, count=1)
+nf_head = re.sub(r'(<meta name="description" content=")[^"]*', lambda m: m.group(1) + "This page could not be found.", nf_head, count=1)
+nf_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap request-sent"><span class="eyebrow">Error 404</span>'
+           '<h1>This page has moved<br><em>or never existed.</em></h1>'
+           '<p>The link may be out of date. Our homes and booking options are a click away.</p>'
+           '<p><a class="button button-gold" href="stays.html">See the stays</a> <a class="button button-outline" href="index.html">Go to the homepage</a></p></section></main>')
+(ROOT / "404.html").write_text(nf_head + nf_main + foot)
 
 # ---------- 4. sitemap ----------
 sm = (ROOT / "sitemap.xml").read_text()

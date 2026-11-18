@@ -27,7 +27,7 @@
       const plan = data.plans.find(p=>p.id===value.plan);
       lines.push('Property city or address: '+optional(value.location),'Number of properties: '+optional(value.properties),'Management interest: '+(plan?`${plan.name} — ${plan.rate}% proposed management fee`:'Help me decide'),'Goals & questions: '+optional(value.message));
     }
-    lines.push('','OPTIONAL CONTACT DETAILS',...contact(value),'',kind==='stay'?'This plan is not a reservation. To book, send a booking request from the home’s page on this website (we confirm availability and the full price before you pay), or book on Airbnb.':'Confirm service availability, fee basis, included services, additional charges, and written terms before any management agreement.',kind==='stay'?'Nothing has been submitted by this planner.':'To contact Vail Breeze: vailbreezeproperties@gmail.com | (720) 828-2021. Review and send your draft in your email app. Nothing has been sent automatically.');
+    lines.push('','OPTIONAL CONTACT DETAILS',...contact(value),'',kind==='stay'?'This plan is not a reservation. To book, send a booking request from the home’s page on this website (we confirm availability and the full price before you pay).':'Confirm service availability, fee basis, included services, additional charges, and written terms before any management agreement.',kind==='stay'?'Nothing has been submitted by this planner.':'To contact Vail Breeze: vailbreezeproperties@gmail.com | (720) 828-2021. Review and send your draft in your email app. Nothing has been sent automatically.');
     return lines.join('\n');
   }
   function emailDraft(kind, text) {
