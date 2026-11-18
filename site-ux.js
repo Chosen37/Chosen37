@@ -48,29 +48,6 @@
       return im;
     });
     const slides = [heroBox.querySelector('img'), ...extra];
-    // Caption for each photo: which home it is, linking to that home.
-    const captions = [
-      ['Furnished stays across Denver', 'stays.html'],
-      ['Curtis Park Gem · Curtis Park', 'stay-curtis-park.html'],
-      ['Mountain View · Englewood', 'stay-mountain-view.html'],
-      ['Curtis Park Gem · Living room', 'stay-curtis-park.html'],
-      ['Prime Downtown Denver · Downtown', 'stay-prime-downtown.html']
-    ];
-    const cap = document.querySelector('[data-hero-caption]');
-    const capNum = cap && cap.querySelector('[data-hc-num]');
-    const capText = cap && cap.querySelector('[data-hc-text]');
-    const timing = on => {
-      if (!cap) return;
-      cap.classList.remove('is-timing');
-      if (on) { void cap.offsetWidth; cap.classList.add('is-timing'); }
-    };
-    const caption = n => {
-      if (!cap) return;
-      capNum.textContent = String(n + 1).padStart(2, '0');
-      capText.textContent = captions[n][0];
-      cap.href = captions[n][1];
-      capText.classList.remove('is-swap'); void capText.offsetWidth; capText.classList.add('is-swap');
-    };
     const ready = new Set([0]);
     let i = 0, timer = null, onScreen = true;
     const show = next => {
@@ -80,7 +57,6 @@
       nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
       setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 2000);
       i = next;
-      caption(next);
     };
     const tick = () => {
       let next = (i + 1) % slides.length;
@@ -90,8 +66,7 @@
     const run = () => {
       clearInterval(timer);
       const on = onScreen && !document.hidden;
-      timer = on ? setInterval(() => { tick(); timing(true); }, 6500) : null;
-      timing(on);
+      timer = on ? setInterval(tick, 6500) : null;
     };
     const start = () => {
       heroBox.setAttribute('data-hero-ready', '');
