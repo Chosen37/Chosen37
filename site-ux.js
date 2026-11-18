@@ -41,7 +41,7 @@
       im.className = 'hero-slide';
       im.alt = ''; im.setAttribute('aria-hidden', 'true');
       im.decoding = 'async'; im.width = 1440; im.height = 957;
-      im.dataset.srcset = [640, 960, 1440].map(w => `assets/hero-slide-${n}-${w}.webp ${w}w`).join(', ');
+      im.dataset.srcset = [640, 1440].map(w => `assets/hero-slide-${n}-${w}.webp ${w}w`).join(', ');
       return im;
     });
     const slides = [heroBox.querySelector('img'), ...extra];
