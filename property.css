@@ -149,3 +149,24 @@
   .gallery .g-side{display:none}
   .gallery .g-main{aspect-ratio:4/3}
 }
+
+/* Availability calendar (synced from Airbnb) */
+.avail{margin:4px 0 14px;border:1px solid #e3d9c6;border-radius:12px;padding:12px;background:#fff}
+.avail-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.avail-month{margin:0;font:700 16px var(--serif);color:var(--ink)}
+.avail-nav{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fffdf8;color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+.avail-nav:disabled{opacity:.35;cursor:default}
+.avail-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.avail-dow{font-size:11px;font-weight:700;color:var(--muted);padding:4px 0;letter-spacing:.04em}
+.avail-day{aspect-ratio:1;min-height:34px;border:0;border-radius:8px;background:#f4eee3;color:var(--ink);font:600 13px var(--sans);cursor:pointer;padding:0}
+.avail-day:hover:not(:disabled){background:#ead9b5}
+.avail-day.is-booked{background:transparent;color:#a3a39b;text-decoration:line-through;font-weight:400}
+.avail-day.is-past{background:transparent;color:#c9c4b8;font-weight:400}
+.avail-day:disabled{cursor:default}
+.avail-day.is-range{background:#ead9b5;border-radius:4px}
+.avail-day.is-edge{background:var(--dark);color:#fffaf0;text-decoration:none}
+.avail-day:focus-visible{outline:2px solid var(--gold-dark);outline-offset:1px}
+.avail-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px!important;color:var(--muted)!important;margin:10px 0 2px!important}
+.avail-legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:-6px;vertical-align:middle}
+.sw-open{background:#f4eee3}.sw-booked{background:transparent;border:1px solid #c9c4b8}.sw-sel{background:var(--dark)}
+.avail-sync{font-size:11px!important;color:var(--muted)!important;margin:0!important}

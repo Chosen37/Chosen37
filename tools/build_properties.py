@@ -226,7 +226,8 @@ def booking_panel(p):
     n = E(p["name"])
     return (f'<aside class="booking-panel" id="book" aria-labelledby="book-title"><h2 id="book-title">Request to book</h2>'
             f'<p>Choose your dates and send a request directly to Vail Breeze. We reply to confirm availability and your total price.</p>'
-            f'<form class="request-form" action="{REQUEST_ENDPOINT}" method="POST" data-request data-property="{n}" data-max-guests="{p["guests"]}">'
+            f'<div class="avail" data-avail data-property-id="{p["id"]}" hidden></div>'
+            f'<form class="request-form" action="{REQUEST_ENDPOINT}" method="POST" data-request data-property="{n}" data-property-id="{p["id"]}" data-max-guests="{p["guests"]}">'
             f'<input type="hidden" name="_subject" value="Booking request: {n}">'
             f'<input type="hidden" name="_template" value="table">'
             f'<input type="hidden" name="_next" value="" data-next>'

@@ -20,6 +20,20 @@ A fast static website (plain HTML, CSS and a little JavaScript), hosted free on 
 ## Owner proposal requests
 The **Request my proposal** form on the For property owners page (`management.html#owner-inquiry`) sends the owner's property details and contact information to the same inbox, with the subject "Property management proposal request". Reply with your recommended plan, what is included, and the fee in writing.
 
+## Airbnb calendar sync
+Each home's page shows a calendar with its booked nights crossed out, and the booking form blocks requests that overlap them. Booked dates come from each listing's Airbnb calendar export link.
+
+- **Connected so far:** Curtis Park Gem and Mountain View.
+- **What is stored:** only booked date ranges, in `data/availability.json`. Guest details in Airbnb's calendar files are never saved.
+- **The links are private:** each one contains a secret key, so they are never committed to the code. They live in a GitHub secret named `CALENDAR_URLS` and, when the sync is run by hand, in a git-ignored `.calendars.json` file.
+- **Hourly sync:** `.github/workflows/sync-calendars.yml` refreshes the dates every hour and publishes any change.
+- **Turning it on (one time):**
+  1. On GitHub: **Settings → Secrets and variables → Actions → New repository secret**. Name it `CALENDAR_URLS`. For the value, paste each listing's ID and its Airbnb export link in this format: `{"curtis-park": "<link>", "mountain-view": "<link>"}`
+  2. Make sure the workflow file is on the `main` branch, because GitHub only runs scheduled jobs from the default branch.
+  3. Go to **Actions → Sync Airbnb calendars → Run workflow** to test it once.
+- **Adding the other homes:** add their links to the secret using the IDs `executive-lodo`, `prime-downtown` and `denver-skyland`.
+- **One direction only:** Airbnb bookings block the website. Direct bookings do not yet block Airbnb, so block those dates on Airbnb when you confirm a stay. The direct-booking plan covers making this two-way.
+
 ## Changing listing content
 All property details live in `data/properties.json`. After editing it, run:
 
