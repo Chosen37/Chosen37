@@ -246,3 +246,13 @@ footer{position:relative;isolation:isolate;overflow:hidden}
 @media (max-width:900px){.page-home .ds-title{margin:0 0 4px}}
 .page-home .date-search .button{align-self:end;height:46px;min-height:46px;margin:0;padding-block:0}
 .page-home .ds-field{margin:0}
+
+/* Hero slideshow: a new home every 2.5 seconds with a 1.1-second crossfade */
+.page-home .hero-image>img.hero-slide{transition:opacity 1.1s ease-in-out}
+.page-home .hero-image>img.hero-slide.is-zoom{animation:heroPushQuick 4s ease-out forwards}
+@keyframes heroPushQuick{from{transform:scale(1)}to{transform:scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.page-home .hero-image>img.hero-slide.is-zoom{animation:none}}
+
+/* Closing call to action: the Mountain View fire pit */
+.closing-cta .cc-img{object-position:50% 50%}
+@media (max-width:700px){.closing-cta .cc-img{object-position:50% 58%}}

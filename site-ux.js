@@ -44,13 +44,18 @@
     const mark = () => { interacted = true; evs.forEach(ev => removeEventListener(ev, mark, true)); if (onInteract) onInteract(); };
     evs.forEach(ev => addEventListener(ev, mark, { capture: true, passive: true }));
     const sizes = '(max-width: 900px) 100vw, 70vw';
-    // After the first photo (Curtis Park Gem): Mountain View, a Curtis Park living room,
-    // Prime Downtown, and the lobby.
+    // After the first photo (Curtis Park Gem), the homes rotate in this order.
+    const pair = path => [`${path}-640.webp 640w`, `${path}.webp 1440w`];
     const sets = [
-      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`),
-      [640, 1440].map(w => `assets/hero-slide-3-${w}.webp ${w}w`),
-      [640, 1440].map(w => `assets/hero-slide-4-${w}.webp ${w}w`),
-      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`)
+      pair('assets/stays/mountain-view/40'),          // Mountain View, front lawn
+      [640, 1440].map(w => `assets/hero-slide-3-${w}.webp ${w}w`), // Curtis Park living room
+      ['assets/stay-lodo-640.webp 640w', 'assets/stay-lodo-800.webp 800w', 'assets/stay-lodo.webp 1200w'], // Executive LoDo
+      pair('assets/stays/mountain-view/32'),          // Mountain View backyard
+      [640, 1440].map(w => `assets/hero-slide-2-${w}.webp ${w}w`), // Mountain View living room
+      pair('assets/stays/executive-lodo/26'),         // LoDo rooftop garden
+      [640, 1440].map(w => `assets/hero-slide-4-${w}.webp ${w}w`), // Prime Downtown living room
+      pair('assets/stays/curtis-park/06'),            // Curtis Park kitchen
+      [640, 768, 960, 1440].map(w => `assets/hero-lobby-${w}.webp ${w}w`) // Lobby
     ];
     const extra = sets.map(set => {
       const im = new Image();
@@ -68,7 +73,7 @@
       slides.forEach(s => s.classList.remove('is-prev'));
       cur.classList.remove('is-active'); cur.classList.add('is-prev');
       nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
-      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 2000);
+      setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 1300);
       i = next;
     };
     const tick = () => {
@@ -79,28 +84,31 @@
     const run = () => {
       clearInterval(timer);
       const on = onScreen && !document.hidden;
-      timer = on ? setInterval(tick, 6500) : null;
+      timer = on ? setInterval(tick, 2500) : null;
     };
     const start = () => {
       heroBox.setAttribute('data-hero-ready', '');
-      extra.forEach((im, k) => {
-        im.onload = () => ready.add(k + 1);
+      // Load the photos one after another so they never compete with each other.
+      const loadNext = k => {
+        const im = extra[k];
+        if (!im) return;
+        im.onload = im.onerror = () => { if (im.naturalWidth) ready.add(k + 1); loadNext(k + 1); };
         im.sizes = sizes; im.srcset = im.dataset.srcset;
         heroBox.appendChild(im);
-      });
-      // Rotation begins at the visitor's first interaction (or after 12 seconds), so a
-      // later photo is never measured as the page's main image.
-      let go = false;
-      const begin = () => {
-        if (go) return; go = true;
-        if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
-        document.addEventListener('visibilitychange', run);
-        run();
       };
+      loadNext(0);
+      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(heroBox);
+      document.addEventListener('visibilitychange', run);
+      run();
+    };
+    // The other photos load and rotate only once the page has loaded and the visitor has
+    // interacted (or after 12 seconds), so they never slow the first view or count as it.
+    let loaded = false, go = false;
+    const begin = () => { if (go || !loaded) return; go = true; idle(start, { timeout: 1500 }); };
+    const later = () => {
+      loaded = true;
       if (interacted) begin(); else { onInteract = begin; setTimeout(begin, 12000); }
     };
-    // Wait until the page has fully loaded so the extra photos never compete with it.
-    const later = () => idle(start, { timeout: 2500 });
     if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
   }
 
