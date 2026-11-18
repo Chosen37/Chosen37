@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Combine the stylesheets into one minified site.css (one request instead of five).
 
-Edit the source files (fonts.css, styles.css, mockup.css, legal.css, property.css),
+Edit the source files (fonts.css, styles.css, mockup.css, legal.css, property.css, home.css),
 then run:  python3 tools/build_css.py   (build_properties.py runs it too)
 """
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ORDER = ["fonts.css", "styles.css", "mockup.css", "legal.css", "property.css"]
+ORDER = ["fonts.css", "styles.css", "mockup.css", "legal.css", "property.css", "home.css"]
 
 
 def minify(css):

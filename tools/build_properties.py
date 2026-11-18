@@ -113,7 +113,32 @@ def relink_cards(path):
     if avg and 'id="collection"' in t:
         t = t.replace('<h2>A place to feel <em>at home</em></h2></div>',
                       f'<h2>A place to feel <em>at home</em></h2><p class="collection-rating">{STAR}<strong>{avg:.2f}</strong> average from {n} Airbnb guest reviews</p></div>', 1)
+    if avg:
+        # numbers band and review heading on the homepage
+        t = re.sub(r'(data-stat="avg">)[^<]*', lambda m: m.group(1) + f"{avg:.2f}", t)
+        t = re.sub(r'(data-stat="count">)[^<]*', lambda m: m.group(1) + str(n), t)
+    if "<!--reviews-->" in t:
+        t = re.sub(r"<!--reviews-->.*?<!--/reviews-->", lambda m: "<!--reviews-->" + reviews_html() + "<!--/reviews-->", t, flags=re.S)
     path.write_text(t)
+
+
+def reviews_html():
+    """Guest review cards for the homepage, from data/reviews.json."""
+    src = ROOT / "data" / "reviews.json"
+    if not src.exists():
+        return ""
+    by_id = {p["id"]: p for p in PROPS}
+    out = []
+    for r in json.loads(src.read_text())["reviews"]:
+        home = by_id.get(r["home"])
+        meta = " · ".join(x for x in (r.get("from"), r.get("date")) if x)
+        link = f'<a href="{home["page"]}">{E(home["name"])}</a>' if home else ""
+        out.append(
+            '<figure class="gr-card"><p class="gr-stars"><span class="sr-only">5 out of 5 stars</span>' + STAR * 5 + '</p>'
+            f'<blockquote><p>“{E(r["text"], quote=False)}”</p></blockquote>'
+            f'<figcaption><strong>{E(r["name"])}</strong><span>{E(meta)}</span>'
+            f'<span class="gr-home">{E(r.get("source", "Airbnb"))} guest at {link}</span></figcaption></figure>')
+    return "".join(out)
 
 
 for f in ("stays.html", "index.html"):

@@ -9,8 +9,11 @@
     const targets = [...document.querySelectorAll(
       'main .section-heading, main .property-card, main .plan-card, main .review-layout, main .plan-note,' +
       ' main .trust-grid > *, main .date-search, main .page-intro, main .steps > li, main .accordion,' +
-      ' main .property-body > section, main .stack .card, main .legal-content > section, main .owner-checklist, main .closing'
-    )].filter(el => !el.closest('.hero, dialog'));
+      ' main .property-body > section, main .stack .card, main .legal-content > section, main .owner-checklist, main .closing,' +
+      ' main .stat, main .how-steps > li, main .hood, main .cc-copy, main .collection-more'
+    )].filter(el => !el.closest('.hero, dialog'))
+      // Sideways rows on smaller screens scroll horizontally, so their items don't animate in.
+      .filter(el => !(el.matches('.property-card') && el.closest('.page-home') && innerWidth <= 700) && !(el.matches('.hood') && innerWidth <= 1100));
     const vh = innerHeight;
     // Anything already on screen stays put; only content below the fold animates in.
     const below = targets.filter(el => el.getBoundingClientRect().top > vh * 0.92);
@@ -45,6 +48,29 @@
       return im;
     });
     const slides = [heroBox.querySelector('img'), ...extra];
+    // Caption for each photo: which home it is, linking to that home.
+    const captions = [
+      ['Furnished stays across Denver', 'stays.html'],
+      ['Curtis Park Gem · Curtis Park', 'stay-curtis-park.html'],
+      ['Mountain View · Englewood', 'stay-mountain-view.html'],
+      ['Curtis Park Gem · Living room', 'stay-curtis-park.html'],
+      ['Prime Downtown Denver · Downtown', 'stay-prime-downtown.html']
+    ];
+    const cap = document.querySelector('[data-hero-caption]');
+    const capNum = cap && cap.querySelector('[data-hc-num]');
+    const capText = cap && cap.querySelector('[data-hc-text]');
+    const timing = on => {
+      if (!cap) return;
+      cap.classList.remove('is-timing');
+      if (on) { void cap.offsetWidth; cap.classList.add('is-timing'); }
+    };
+    const caption = n => {
+      if (!cap) return;
+      capNum.textContent = String(n + 1).padStart(2, '0');
+      capText.textContent = captions[n][0];
+      cap.href = captions[n][1];
+      capText.classList.remove('is-swap'); void capText.offsetWidth; capText.classList.add('is-swap');
+    };
     const ready = new Set([0]);
     let i = 0, timer = null, onScreen = true;
     const show = next => {
@@ -54,13 +80,19 @@
       nxt.classList.remove('is-zoom'); void nxt.offsetWidth; nxt.classList.add('is-zoom', 'is-active');
       setTimeout(() => { cur.classList.remove('is-prev', 'is-zoom'); }, 2000);
       i = next;
+      caption(next);
     };
     const tick = () => {
       let next = (i + 1) % slides.length;
       while (!ready.has(next) && next !== i) next = (next + 1) % slides.length;
       if (next !== i) show(next);
     };
-    const run = () => { clearInterval(timer); timer = (onScreen && !document.hidden) ? setInterval(tick, 6500) : null; };
+    const run = () => {
+      clearInterval(timer);
+      const on = onScreen && !document.hidden;
+      timer = on ? setInterval(() => { tick(); timing(true); }, 6500) : null;
+      timing(on);
+    };
     const start = () => {
       heroBox.setAttribute('data-hero-ready', '');
       extra.forEach((im, k) => {
@@ -77,13 +109,66 @@
     if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
   }
 
+  // ---- Numbers band: count up once when it scrolls into view ----
+  const counters = [...document.querySelectorAll('[data-count]')];
+  if (counters.length && !reduce && 'IntersectionObserver' in window) {
+    const band = counters[0].closest('section');
+    if (band && band.getBoundingClientRect().top > innerHeight * 0.85) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        counters.forEach(el => {
+          const end = parseFloat(el.textContent);
+          const dec = (el.textContent.split('.')[1] || '').length;
+          if (!isFinite(end)) return;
+          const t0 = performance.now(), dur = 1400;
+          const step = now => {
+            const k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+            el.textContent = (end * ease).toFixed(dec);
+            if (k < 1) requestAnimationFrame(step); else el.textContent = end.toFixed(dec);
+          };
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.4 });
+      io.observe(band);
+    }
+  }
+
+  // ---- Guest reviews: arrows and a progress line for the sideways row ----
+  const track = document.querySelector('[data-reviews]');
+  if (track) {
+    const section = track.closest('section');
+    const controls = section.querySelector('.gr-controls');
+    const prev = section.querySelector('[data-gr-prev]');
+    const next = section.querySelector('[data-gr-next]');
+    const bar = section.querySelector('.gr-progress i');
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const p = max > 0 ? track.scrollLeft / max : 1;
+      if (bar) bar.style.setProperty('--p', (track.clientWidth / track.scrollWidth + p * (1 - track.clientWidth / track.scrollWidth)).toFixed(3));
+      if (prev) prev.disabled = track.scrollLeft < 8;
+      if (next) next.disabled = track.scrollLeft > max - 8;
+    };
+    const stepBy = dir => {
+      const card = track.querySelector('.gr-card:not(.gr-feature)') || track.firstElementChild;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+      track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: reduce ? 'auto' : 'smooth' });
+    };
+    if (controls) controls.hidden = false;
+    if (prev) prev.addEventListener('click', () => stepBy(-1));
+    if (next) next.addEventListener('click', () => stepBy(1));
+    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+
   // ---- Listing cards: show the home's second photo on hover (mouse only) ----
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.querySelectorAll('.property-photo[data-alt-src]').forEach(link => {
       const src = link.dataset.altSrc;
       if (!src) return;
       let alt = null;
-      link.addEventListener('mouseenter', () => {
+      (link.closest('.property-card') || link).addEventListener('mouseenter', () => {
         if (alt) return;
         alt = new Image();
         alt.className = 'card-alt';
