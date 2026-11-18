@@ -17,7 +17,7 @@
   function label() {
     const playing = !video.paused;
     toggle.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
-    toggle.setAttribute('aria-label', playing ? 'Pause the Union Station video' : 'Play the Union Station video');
+    toggle.setAttribute('aria-label', playing ? 'Pause the Denver film' : 'Play the Denver film');
     toggle.setAttribute('aria-pressed', String(playing));
   }
 
