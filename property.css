@@ -123,3 +123,9 @@
 .request-sent{padding-block:clamp(48px,7vw,110px)}
 .request-sent p{max-width:60ch;font-size:18px;line-height:1.55;margin-bottom:14px}
 @media (max-width:420px){.rq-row{grid-template-columns:1fr}}
+
+/* Phones: one large photo plus "View all photos" (the rest load only when opened) */
+@media (max-width:640px){
+  .gallery .g-side{display:none}
+  .gallery .g-main{aspect-ratio:4/3}
+}

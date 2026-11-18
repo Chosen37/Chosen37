@@ -39,7 +39,8 @@
           "width": 1440,
           "height": 1010,
           "alt": "Curtis Park Gem — Exterior",
-          "room": "Exterior"
+          "room": "Exterior",
+          "src768": "assets/stays/curtis-park/29-768.webp"
         },
         {
           "src": "assets/stays/curtis-park/06.webp",
@@ -491,7 +492,8 @@
           "width": 1440,
           "height": 2558,
           "alt": "Executive LoDo Condo — Balcony",
-          "room": "Balcony"
+          "room": "Balcony",
+          "src768": "assets/stays/executive-lodo/33-768.webp"
         },
         {
           "src": "assets/stays/executive-lodo/53.webp",
@@ -1249,7 +1251,8 @@
           "width": 1440,
           "height": 960,
           "alt": "Mountain View — Exterior",
-          "room": "Exterior"
+          "room": "Exterior",
+          "src768": "assets/stays/mountain-view/40-768.webp"
         },
         {
           "src": "assets/stays/mountain-view/02.webp",
@@ -1912,7 +1915,8 @@
           "width": 1440,
           "height": 1080,
           "alt": "Prime Downtown Denver — Exterior",
-          "room": "Exterior"
+          "room": "Exterior",
+          "src768": "assets/stays/prime-downtown/13-768.webp"
         },
         {
           "src": "assets/stays/prime-downtown/07.webp",
@@ -2433,7 +2437,8 @@
           "width": 1440,
           "height": 811,
           "alt": "Denver Skyland — Exterior 1",
-          "room": "Exterior 1"
+          "room": "Exterior 1",
+          "src768": "assets/stays/denver-skyland/19-768.webp"
         },
         {
           "src": "assets/stays/denver-skyland/20.webp",

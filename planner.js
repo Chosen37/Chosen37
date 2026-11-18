@@ -22,7 +22,7 @@
       const property = data.properties.find(p=>p.id===value.property);
       const reference = property ? property.name+' — '+property.location : 'No preference / help me choose';
       lines.push('Preferred stay: '+reference,'Check-in: '+optional(value.checkin),'Check-out: '+optional(value.checkout),'Guests: '+optional(value.guests),'Purpose: '+optional(value.purpose),'Preferences & questions: '+optional(value.message));
-      if(property)lines.push('View current rates & availability: '+property.url);
+      if(property)lines.push('Request to book: '+new URL(property.url,location.href).href);
     } else {
       const plan = data.plans.find(p=>p.id===value.plan);
       lines.push('Property city or address: '+optional(value.location),'Number of properties: '+optional(value.properties),'Management interest: '+(plan?`${plan.name} — ${plan.rate}% proposed management fee`:'Help me decide'),'Goals & questions: '+optional(value.message));

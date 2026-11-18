@@ -57,8 +57,13 @@ def value_html(v):
     return E(str(v))
 
 
+# ---------- 0. combined stylesheet ----------
+import runpy
+runpy.run_path(str(ROOT / "tools/build_css.py"))
+
 # ---------- 1. runtime data ----------
-runtime = {k: v for k, v in DATA.items() if not k.startswith("_")}
+runtime = {"company": DATA["company"], "plans": DATA["plans"],
+           "properties": [{k: p[k] for k in ("id", "name", "location", "city", "guests", "page")} | {"url": p["page"]} for p in PROPS]}
 (ROOT / "site-data.js").write_text("window.VAIL_BREEZE = " + json.dumps(runtime, indent=2, ensure_ascii=False) + ";\n")
 
 # ---------- 2. listing cards open the detail page ----------
@@ -109,13 +114,17 @@ def page_head(p):
     h = re.sub(r'(<meta property="og:image:width" content=")[^"]*', lambda m: m.group(1) + str(p['photos'][0]['width']), h, count=1)
     h = re.sub(r'(<meta property="og:image:height" content=")[^"]*', lambda m: m.group(1) + str(p['photos'][0]['height']), h, count=1)
     if "property.css" not in h:
-        h = h.replace('<link rel="stylesheet" href="legal.css">', '<link rel="stylesheet" href="legal.css"><link rel="stylesheet" href="property.css">')
         h = h.replace('<script src="app.js" defer></script>', '<script src="app.js" defer></script><script src="gallery.js" defer></script><script src="booking-request.js" defer></script>')
     h = h.replace("form-action 'none'", "form-action https://formsubmit.co")
     if p.get("directBooking"):
         origin = "{u.scheme}://{u.netloc}".format(u=urlparse(p["directBooking"]["bookingUrl"]))
         h = h.replace("object-src 'none';", f"object-src 'none'; frame-src {origin};")
     h = re.sub(r'<body class="[^"]*"', '<body class="page-property"', h, count=1)
+    m = p["photos"][0]
+    pre = f'<link rel="preload" as="image" href="{m["src640"]}" imagesrcset="{srcset(m)}" imagesizes="{MAIN_SIZES}" fetchpriority="high">'
+    h = h.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
+    # Preload exactly the fonts property pages use (no medium weight).
+    h = re.sub(r'<link rel="preload" href="assets/fonts/dm-sans-500-normal[^>]*>', '', h)
     h = h.replace("</head>", jsonld(p) + "</head>", 1)
     return h
 
@@ -143,15 +152,25 @@ def jsonld(p):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
+def srcset(x):
+    s = f'{x["src640"]} 640w, '
+    if x.get("src768"):
+        s += f'{x["src768"]} 768w, '
+    return s + f'{x["src"]} {x["width"]}w'
+
+
+MAIN_SIZES = "(max-width: 900px) calc(100vw - 40px), 66vw"
+
+
 def gallery_html(p):
     ph = p["photos"]
     def link(i, cls):
         x = ph[i]
-        sizes = "(max-width: 900px) 100vw, 66vw" if cls == "g-main" else "(max-width: 900px) 50vw, 33vw"
+        sizes = MAIN_SIZES if cls == "g-main" else "(max-width: 900px) 50vw, 33vw"
         load = 'fetchpriority="high"' if i == 0 else 'loading="lazy"'
         return (f'<a class="{cls}" href="{x["src"]}" data-photo data-alt="{E(x["alt"])}" data-w="{x["width"]}" data-h="{x["height"]}" '
                 f'aria-label="Open photo {i + 1} of {len(ph)} full screen">'
-                f'<img src="{x["src"]}" srcset="{x["src640"]} 640w, {x["src"]} {x["width"]}w" sizes="{sizes}" '
+                f'<img src="{x["src"]}" srcset="{srcset(x)}" sizes="{sizes}" '
                 f'alt="{E(x["alt"])}" width="{x["width"]}" height="{x["height"]}" {load} decoding="async"></a>')
     side = "".join(link(i, "g-thumb") for i in range(1, min(len(ph), 3)))
     cls = "gallery" + (" single" if len(ph) == 1 else "")
