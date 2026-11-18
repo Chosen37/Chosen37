@@ -499,8 +499,7 @@
           "width": 1440,
           "height": 2558,
           "alt": "Executive LoDo Condo — Balcony",
-          "room": "Balcony",
-          "src768": "assets/stays/executive-lodo/33-768.webp"
+          "room": "Balcony"
         },
         {
           "src": "assets/stays/executive-lodo/53.webp",
@@ -1922,8 +1921,7 @@
           "width": 1440,
           "height": 1080,
           "alt": "Prime Downtown Denver — Exterior",
-          "room": "Exterior",
-          "src768": "assets/stays/prime-downtown/13-768.webp"
+          "room": "Exterior"
         },
         {
           "src": "assets/stays/prime-downtown/07.webp",
@@ -2445,8 +2443,7 @@
           "width": 1440,
           "height": 811,
           "alt": "Denver Skyland — Exterior 1",
-          "room": "Exterior 1",
-          "src768": "assets/stays/denver-skyland/19-768.webp"
+          "room": "Exterior 1"
         },
         {
           "src": "assets/stays/denver-skyland/20.webp",

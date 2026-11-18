@@ -141,10 +141,7 @@ def explore_html():
     out = []
     for x in json.loads(src.read_text())["destinations"]:
         wide = "d-12" in x["size"]
-        small, big = (768, 1600) if wide else (640, 1280)
-        sizes = "(max-width: 700px) 82vw, 100vw" if wide else "(max-width: 700px) 82vw, (max-width: 1100px) 50vw, 46vw"
-        img = (f'<img src="{x["img"]}-{big}.webp" srcset="{x["img"]}-{small}.webp {small}w, {x["img"]}-{big}.webp {big}w" '
-               f'sizes="{sizes}" alt="{E(x["alt"])}" loading="lazy" fetchpriority="low" decoding="async">')
+        img = (f'<img src="{x["img"]}.webp" alt="{E(x["alt"])}" loading="lazy" fetchpriority="low" decoding="async">')
         home = by_id.get(x.get("stay") or "")
         link = (f'<a class="dest-stay" href="{home["page"]}">Stay nearby: {E(home["name"])}{arrow}</a>' if home
                 else f'<a class="dest-stay" href="stays.html">Browse furnished stays{arrow}</a>')
