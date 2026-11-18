@@ -83,3 +83,21 @@ footer{background:#0f2a21}
   .page-home .hero-image:after{background:linear-gradient(180deg,#faf5eb 0%,#faf5eb00 22%)}
   .page-home .hero-film-controls{right:max(14px,env(safe-area-inset-right,0px));bottom:14px}
 }
+
+/* Homepage: five homes as 3 + 2 (centered) on larger screens, 2 + 2 + 1 on small tablets */
+@media (min-width:801px){
+  .page-home .property-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .page-home .property-grid>.property-card{grid-column:span 2}
+  .page-home .property-grid>.property-card:nth-child(4){grid-column:2/span 2}
+}
+@media (min-width:601px) and (max-width:800px){
+  .page-home .property-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .page-home .property-grid>.property-card{grid-column:span 2}
+  .page-home .property-grid>.property-card:nth-child(5){grid-column:2/span 2}
+  .page-home .property-grid{gap:18px}
+  .page-home .property-copy{padding:16px 16px 16px}
+  .page-home .property-copy h3{font-size:26px;min-height:0}
+  .page-home .property-location{font-size:15px;min-height:0}
+  .page-home .property-facts{flex-direction:row;flex-wrap:wrap;gap:6px 14px;font-size:15px}
+  .page-home .booking-link{font-size:17px}
+}
