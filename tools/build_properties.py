@@ -67,6 +67,25 @@ runtime = {"company": DATA["company"], "plans": DATA["plans"],
 (ROOT / "site-data.js").write_text("window.VAIL_BREEZE = " + json.dumps(runtime, indent=2, ensure_ascii=False) + ";\n")
 
 # ---------- 2. listing cards open the detail page ----------
+MIN_REVIEWS = 5  # show a home's rating only when it rests on at least this many reviews
+STAR = '<svg class="icon icon-star" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m12 2.8 2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8Z"/></svg>'
+
+
+def rating_html(p, cls="card-rating"):
+    r = p.get("rating")
+    if not r or r["count"] < MIN_REVIEWS:
+        return ""
+    badge = f' <span class="rating-badge">{E(r["badge"])} on Airbnb</span>' if r.get("badge") else ""
+    return (f'<p class="{cls}">{STAR}<strong>{r["average"]:.2f}</strong>'
+            f'<span>{r["count"]} Airbnb reviews</span>{badge}</p>')
+
+
+def portfolio_rating():
+    rs = [p["rating"] for p in PROPS if p.get("rating")]
+    n = sum(r["count"] for r in rs)
+    return (sum(r["average"] * r["count"] for r in rs) / n, n) if n else (None, 0)
+
+
 def relink_cards(path):
     t = path.read_text()
     for p in PROPS:
@@ -81,7 +100,19 @@ def relink_cards(path):
                    f'<h3><a class="card-title-link" href="{page}">{E(name, quote=False)}</a></h3>', b, count=1)
         b = re.sub(r'<a class="button button-gold booking-link" href="[^"]*"[^>]*>.*?</a>',
                    f'<a class="button button-gold booking-link" href="{page}" aria-label="View &amp; book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
+        # rating line under the location (rebuilt each run)
+        b = re.sub(r'<p class="card-rating">.*?</p>', '', b, flags=re.S)
+        b = b.replace('<p class="property-facts">', rating_html(p) + '<p class="property-facts">', 1)
+        # second photo, shown on hover
+        alt = p["photos"][1]["src640"] if len(p["photos"]) > 1 else ""
+        b = re.sub(r'<a class="property-photo"( data-alt-src="[^"]*")?', f'<a class="property-photo" data-alt-src="{alt}"', b, count=1)
         t = t.replace(a, b)
+    # homepage: overall rating under "A place to feel at home"
+    avg, n = portfolio_rating()
+    t = re.sub(r'<p class="collection-rating">.*?</p>', '', t, flags=re.S)
+    if avg and 'id="collection"' in t:
+        t = t.replace('<h2>A place to feel <em>at home</em></h2></div>',
+                      f'<h2>A place to feel <em>at home</em></h2><p class="collection-rating">{STAR}<strong>{avg:.2f}</strong> average from {n} Airbnb guest reviews</p></div>', 1)
     path.write_text(t)
 
 
@@ -120,6 +151,7 @@ def page_head(p):
         origin = "{u.scheme}://{u.netloc}".format(u=urlparse(p["directBooking"]["bookingUrl"]))
         h = h.replace("object-src 'none';", f"object-src 'none'; frame-src {origin};")
     h = re.sub(r'<body class="[^"]*"', '<body class="page-property"', h, count=1)
+    h = h.replace('<script src="stay-search.js" defer></script>', "")
     m = p["photos"][0]
     pre = f'<link rel="preload" as="image" href="{m["src640"]}" imagesrcset="{srcset(m)}" imagesizes="{MAIN_SIZES}" fetchpriority="high">'
     h = h.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
@@ -318,13 +350,15 @@ def detail_page(p, others):
     main = (f'<main id="main" tabindex="-1"><article class="property-page wrap" aria-labelledby="property-title">'
             f'<nav class="crumbs" aria-label="Breadcrumb"><a href="stays.html">Furnished stays</a><span aria-hidden="true">/</span><span aria-current="page">{E(p["name"])}</span></nav>'
             f'<header class="property-head"><div><span class="eyebrow">{ICON["pin"]} {E(p["location"])} · {E(p["type"])}</span>'
-            f'<h1 id="property-title">{E(p["name"])}</h1></div>{facts}</header>'
+            f'<h1 id="property-title">{E(p["name"])}</h1>{rating_html(p, "head-rating")}</div>{facts}</header>'
             f'{gallery_html(p)}'
             f'<div class="property-layout"><div class="property-body">{body}</div>{booking_panel(p)}</div>'
             f'</article>'
             f'<section class="other-stays wrap section" aria-labelledby="other-title"><h2 id="other-title">More places to feel <em>at home</em></h2>'
             f'<div class="property-grid">{other_cards}</div></section>'
-            f'{viewer_html(p)}</main>')
+            f'{viewer_html(p)}'
+            f'<div class="m-book-bar" data-book-bar><div><strong>{E(p["name"])}</strong><span>Up to {plural(p["guests"], "guest")} · {plural(p["bedrooms"], "bedroom")}</span></div>'
+            f'<a class="button button-gold" href="#book">Request to book</a></div></main>')
     return page_head(p) + main + foot
 
 
@@ -338,6 +372,7 @@ sent_head = re.sub(r"<title>.*?</title>", "<title>Request sent | Vail Breeze Pro
 sent_head = re.sub(r'<body class="[^"]*"', '<body class="page-property"', sent_head, count=1)
 sent_head = sent_head.replace('<meta name="viewport"', '<meta name="robots" content="noindex"><meta name="viewport"', 1)
 sent_head = re.sub(r'<link rel="canonical" href="[^"]*">', '', sent_head, count=1)
+sent_head = sent_head.replace('<script src="stay-search.js" defer></script>', "")
 sent_head = re.sub(r'(<meta name="description" content=")[^"]*', lambda m: m.group(1) + "Your booking request has been sent to Vail Breeze Properties.", sent_head, count=1)
 sent_main = ('<main id="main" tabindex="-1"><section class="page-intro wrap request-sent"><span class="eyebrow">Booking request</span>'
              '<h1>Request sent.<br><em>Thank you.</em></h1>'

@@ -452,7 +452,14 @@
         ]
       },
       "directBooking": null,
-      "propertyKind": "Entire home in Denver, Colorado"
+      "propertyKind": "Entire home in Denver, Colorado",
+      "rating": {
+        "average": 4.97,
+        "count": 31,
+        "badge": "Top 10% of homes",
+        "source": "Airbnb",
+        "asOf": "2026-11-18"
+      }
     },
     {
       "id": "executive-lodo",
@@ -1211,7 +1218,14 @@
         ]
       },
       "directBooking": null,
-      "propertyKind": "Entire condo in Denver, Colorado"
+      "propertyKind": "Entire condo in Denver, Colorado",
+      "rating": {
+        "average": 4.99,
+        "count": 79,
+        "badge": "Top 5% of homes",
+        "source": "Airbnb",
+        "asOf": "2026-11-18"
+      }
     },
     {
       "id": "mountain-view",
@@ -1875,7 +1889,14 @@
         ]
       },
       "directBooking": null,
-      "propertyKind": "Entire home in Englewood, Colorado"
+      "propertyKind": "Entire home in Englewood, Colorado",
+      "rating": {
+        "average": 4.98,
+        "count": 99,
+        "badge": null,
+        "source": "Airbnb",
+        "asOf": "2026-11-18"
+      }
     },
     {
       "id": "prime-downtown",
@@ -2397,7 +2418,14 @@
         ]
       },
       "directBooking": null,
-      "propertyKind": "Entire condo in Denver, Colorado"
+      "propertyKind": "Entire condo in Denver, Colorado",
+      "rating": {
+        "average": 4.83,
+        "count": 6,
+        "badge": null,
+        "source": "Airbnb",
+        "asOf": "2026-11-18"
+      }
     },
     {
       "id": "denver-skyland",
@@ -2771,7 +2799,14 @@
         ]
       },
       "directBooking": null,
-      "propertyKind": "Entire home in Denver, Colorado"
+      "propertyKind": "Entire home in Denver, Colorado",
+      "rating": {
+        "average": 3.67,
+        "count": 3,
+        "badge": null,
+        "source": "Airbnb",
+        "asOf": "2026-11-18"
+      }
     }
   ],
   "plans": [

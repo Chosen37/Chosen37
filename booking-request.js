@@ -25,6 +25,7 @@
     if (next) next.value = new URL('request-sent.html', location.href).href;
 
     // ---- Booked nights from the Airbnb calendar sync ----
+    let cal = null;            // the availability calendar, once loaded
     let booked = [];            // [[start, end), ...] ISO strings; end = checkout day
     const isBooked = s => booked.some(([a, b]) => s >= a && s < b);
     const rangeFree = (a, b) => !booked.some(([s, e]) => s < b && e > a);
@@ -49,6 +50,17 @@
     }
     checkin.addEventListener('change', () => { showError(''); update(); if (checkin.value && !checkout.value) checkout.focus(); });
     checkout.addEventListener('change', () => { showError(''); update(); });
+
+    // Dates carried over from a date search (stays page or homepage)
+    const qs = new URLSearchParams(location.search);
+    const qIn = qs.get('checkin'), qOut = qs.get('checkout'), qGuests = qs.get('guests');
+    const okDate = v => /^\d{4}-\d{2}-\d{2}$/.test(v || '');
+    if (okDate(qIn) && okDate(qOut) && qIn >= today && qOut > qIn) {
+      checkin.value = qIn; checkout.value = qOut;
+      const g = form.querySelector('select[name="Guests"]');
+      if (g && qGuests && [...g.options].some(o => o.value === qGuests)) g.value = qGuests;
+      update();
+    }
 
     function problem() {
       if (!checkin.value || !checkout.value) return 'Choose your check-in and checkout dates.';
@@ -84,7 +96,6 @@
     });
 
     // ---- Availability calendar (shown only for homes with a synced calendar) ----
-    let cal = null;
     const box = document.querySelector(`[data-avail][data-property-id="${form.dataset.propertyId}"]`);
     if (!box) return;
 
@@ -95,20 +106,24 @@
         if (!ranges) return;
         booked = ranges;
         cal = calendar(box, data.updated);
+        if (checkin.value && checkout.value && !rangeFree(checkin.value, checkout.value)) {
+          showError('Some of your searched nights are already booked here. Pick open dates on the calendar.');
+        }
         box.hidden = false;
         cal.render();
       })
       .catch(() => {});
 
     function calendar(root, updated) {
-      let view = new Date(parse(today).getFullYear(), parse(today).getMonth(), 1);
+      const startFrom = checkin.value ? parse(checkin.value) : parse(today);
+      let view = new Date(startFrom.getFullYear(), startFrom.getMonth(), 1);
       const maxMonth = new Date(view.getFullYear(), view.getMonth() + 12, 1);
       const when = updated ? new Date(updated).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';
       root.innerHTML =
         '<div class="avail-head"><button type="button" class="avail-nav" data-prev aria-label="Previous month">‹</button>' +
         '<p class="avail-month" aria-live="polite"></p>' +
         '<button type="button" class="avail-nav" data-next aria-label="Next month">›</button></div>' +
-        '<div class="avail-grid" role="grid"></div>' +
+        '<div class="avail-grid" aria-label="Availability"></div>' +
         '<p class="avail-legend"><span class="sw sw-open"></span>Open <span class="sw sw-booked"></span>Booked <span class="sw sw-sel"></span>Your dates</p>' +
         `<p class="avail-sync">Synced with Airbnb${when ? ' · updated ' + when : ''}</p>`;
       const grid = root.querySelector('.avail-grid');
