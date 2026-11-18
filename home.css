@@ -411,3 +411,53 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
 @media (max-width:900px){.page-home .hero-image>img.hero-poster,.page-home .hero-image>.hero-film{object-position:50% 50%}}
 .rv-ready .dest.rv>img{transform:scale(1.1)}.rv-ready .dest.rv.in>img{transform:none}
 #explore-rockies>img{object-position:50% 38%}
+
+/* ---------- Listings: a row of three, then two (equal, consistent cards) ---------- */
+@media (min-width:1101px){
+  .page-home .property-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:24px}
+  .page-home .property-grid>.property-card,.page-home .property-grid>.property-card:nth-child(n){grid-column:span 2}
+  .page-home .property-grid>.property-card:nth-child(4),.page-home .property-grid>.property-card:nth-child(5){grid-column:span 3}
+  .page-home .property-grid>.property-card .property-photo,.page-home .property-grid>.property-card:nth-child(n) .property-photo{flex:none;min-height:0;aspect-ratio:3/2}
+  .page-home .property-grid>.property-card:nth-child(4) .property-photo,.page-home .property-grid>.property-card:nth-child(5) .property-photo{aspect-ratio:16/9}
+  .page-home .property-grid>.property-card:nth-child(n) h3{font-size:clamp(26px,2vw,32px)}
+}
+@media (min-width:701px) and (max-width:1100px){
+  .page-home .property-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .page-home .property-grid>.property-card,.page-home .property-grid>.property-card:nth-child(n){grid-column:auto}
+  .page-home .property-grid>.property-card:nth-child(n) .property-photo{aspect-ratio:3/2}
+  .page-home .property-grid>.property-card:nth-child(5){grid-column:1/-1;width:calc(50% - 10px);justify-self:center}
+}
+.page-home .property-copy{gap:2px}
+.page-home .property-copy h3{line-height:1.05;margin-bottom:6px}
+@media (min-width:1101px){.page-home .property-grid>.property-card:nth-child(4) .property-photo,.page-home .property-grid>.property-card:nth-child(5) .property-photo{aspect-ratio:2/1}}
+
+/* ---------- Explore Colorado: refined editorial typography ---------- */
+.explore-head h2{font-weight:400;letter-spacing:-.055em}
+.explore-head h2 em{font-weight:400}
+.dest h3{font-weight:400;font-size:clamp(30px,2.6vw,44px);letter-spacing:-.035em;line-height:1.02}
+.dest.d-12 h3{font-size:clamp(40px,4.4vw,72px)}
+.dest-area{display:flex;align-items:center;gap:10px}
+.dest-area::before{content:"";width:22px;height:1px;background:currentColor;opacity:.8}
+.dest-copy{gap:10px}
+.dest-copy>p:not(.dest-area){max-width:440px;font-size:15px;line-height:1.6;color:#ecebe5}
+.dest-stay{margin-top:8px;padding-top:12px;border-top:1px solid #f8f7f333;background:none;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.dest-stay:hover{background:none;color:var(--gold-light)}
+.dest::before{background:linear-gradient(180deg,#0e1a1700 34%,#0e1a1759 56%,#0e1a17e6 100%)}
+@media (hover:hover) and (min-width:1001px){
+  .dest-copy>p:not(.dest-area),.dest-stay{opacity:0;transform:translateY(12px);max-height:0;margin:0;overflow:hidden;transition:opacity .45s ease,transform .5s cubic-bezier(.2,.7,.2,1),max-height .5s ease}
+  .dest-stay{padding-top:0;border-top-color:transparent}
+  .dest:hover .dest-copy>p:not(.dest-area),.dest:focus-within .dest-copy>p:not(.dest-area){opacity:1;transform:none;max-height:140px}
+  .dest:hover .dest-stay,.dest:focus-within .dest-stay{opacity:1;transform:none;max-height:60px;margin-top:8px;padding-top:12px;border-top-color:#f8f7f333}
+  .dest.d-12 .dest-copy>p:not(.dest-area),.dest.d-12 .dest-stay{opacity:1;transform:none;max-height:none;margin-top:8px}
+  .dest.d-12 .dest-stay{padding-top:12px;border-top-color:#f8f7f333}
+  .dest::before{background:linear-gradient(180deg,#0e1a1700 48%,#0e1a17b3 100%);transition:opacity .4s}
+  .dest:hover::before{background:linear-gradient(180deg,#0e1a1700 26%,#0e1a17f0 100%)}
+}
+
+/* Explore: keep the mosaic complete on tablets (nine cards → last one full width) */
+@media (min-width:701px) and (max-width:1100px){#explore-red-rocks{grid-column:1/-1}}
+/* Owner headline: balanced lines */
+.os-head h2{text-wrap:balance;max-width:16ch}
+@media (max-width:700px){.os-head h2{max-width:none}}
+/* Section rhythm: consistent heading spacing on every screen */
+.page-home .home-heading h2,.explore-head h2,.os-head h2,.cc-copy h2{text-wrap:balance}

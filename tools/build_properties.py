@@ -77,7 +77,7 @@ def rating_html(p, cls="card-rating"):
         return ""
     badge = f' <span class="rating-badge">{E(r["badge"])} on Airbnb</span>' if r.get("badge") else ""
     return (f'<p class="{cls}">{STAR}<strong>{r["average"]:.2f}</strong>'
-            f'<span>{r["count"]} Airbnb reviews</span>{badge}</p>')
+            f'<span>{r["count"]} reviews</span>{badge}</p>')
 
 
 def portfolio_rating():
@@ -164,15 +164,15 @@ def reviews_html():
     out = []
     for r in json.loads(src.read_text())["reviews"]:
         home = by_id.get(r["home"])
-        meta = " · ".join(x for x in (r.get("from"), r.get("date")) if x)
+        meta = " · ".join(x for x in (r.get("title"), r.get("from"), r.get("date")) if x)
         link = f'<a href="{home["page"]}">{E(home["name"])}</a>' if home else ""
         out.append(
             '<figure class="gr-card"><p class="gr-stars"><span class="sr-only">5 out of 5 stars</span>' + STAR * 5 + '</p>'
             f'<blockquote><p>“{E(r["text"], quote=False)}”</p></blockquote>'
-            + ('<figcaption>' + (f'<img class="gr-avatar" src="{r["photo"]}" alt="{E(r["name"])}" width="144" height="144" loading="lazy" decoding="async">'
+            + ('<figcaption>' + (f'<img class="gr-avatar" src="{r["photo"]}" alt="{E(r["name"])}" width="96" height="96" loading="lazy" decoding="async">'
                if r.get("photo") and (ROOT / r["photo"]).exists() else f'<span class="gr-avatar" aria-hidden="true">{E(r["name"][:1])}</span>')) +
             f'<span class="gr-who"><strong>{E(r["name"])}</strong><span>{E(meta)}</span>'
-            f'<span class="gr-home">{E(r.get("source", "Airbnb"))} guest at {link}</span></span></figcaption></figure>')
+            f'<span class="gr-home">Stayed at {link}</span></span></figcaption></figure>')
     return "".join(out)
 
 
