@@ -42,8 +42,6 @@ footer{background:#0f2a21}
 .footer-fair-housing svg{width:18px;height:18px}
 
 @media (max-width:900px){
-  .page-home .hero-image{width:100%}
-  .page-home .hero-image:after{background:linear-gradient(180deg,#faf5ebf2 0%,#faf5ebe0 55%,#faf5eb99 100%)}
   .review-layout{grid-template-columns:auto 1fr;gap:20px}
   .review-band h2{grid-column:1/-1;border-right:0;border-bottom:3px solid var(--gold);padding:0 0 12px;min-height:0}
   .review-quote{grid-column:1/-1;grid-template-columns:32px 1fr;column-gap:12px}
@@ -62,3 +60,26 @@ footer{background:#0f2a21}
 /* Hero video sits under the cream fade; the still frame shows until it plays */
 .page-home .hero-image:after{z-index:3}
 .page-home .hero-film-controls{z-index:5}
+
+/* ---------- Hero video: responsive layout ---------- */
+/* Laptops: keep the headline clear of the Union Station sign */
+@media (min-width:901px) and (max-width:1599px){
+  .page-home .hero-image{width:64%}
+}
+/* Landscape tablets and small laptops */
+@media (min-width:901px) and (max-width:1199px){
+  .page-home .hero-image{width:56%}
+  .page-home .hero h1{font-size:clamp(50px,5.6vw,62px)}
+  .page-home .hero p{font-size:18px;max-width:440px}
+  .page-home .hero-actions{gap:14px}
+  .page-home .hero-actions .button{min-width:0;padding-inline:22px;font-size:18px}
+}
+/* Phones and portrait tablets: copy first, then the film as a full-width band */
+@media (max-width:900px){
+  .page-home .hero{flex-direction:column;align-items:stretch;min-height:0;background:var(--paper)}
+  .page-home .hero-copy{order:1;padding-block:22px 24px}
+  .page-home .hero-image{position:relative;inset:auto;order:2;width:100%;height:clamp(220px,58vw,440px);z-index:0}
+  .page-home .hero-image>img,.page-home .hero-video{object-position:50% 40%}
+  .page-home .hero-image:after{background:linear-gradient(180deg,#faf5eb 0%,#faf5eb00 22%)}
+  .page-home .hero-film-controls{right:max(14px,env(safe-area-inset-right,0px));bottom:14px}
+}
