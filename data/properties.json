@@ -844,7 +844,8 @@
           "width": 1440,
           "height": 958,
           "alt": "Executive LoDo Condo — Living room",
-          "room": "Living room"
+          "room": "Living room",
+          "src768": "assets/stays/executive-lodo/01-768.webp"
         },
         {
           "src": "assets/stays/executive-lodo/23.webp",
@@ -1209,7 +1210,8 @@
         "badge": "Top 5% of homes",
         "source": "Airbnb",
         "asOf": "2026-11-18"
-      }
+      },
+      "stageCover": "assets/stays/executive-lodo/01.webp"
     },
     {
       "id": "mountain-view",
@@ -1961,7 +1963,8 @@
           "width": 1440,
           "height": 1080,
           "alt": "Prime Downtown Denver — Living room",
-          "room": "Living room"
+          "room": "Living room",
+          "src768": "assets/stays/prime-downtown/01-768.webp"
         },
         {
           "src": "assets/stays/prime-downtown/05.webp",
@@ -2401,7 +2404,8 @@
         "badge": null,
         "source": "Airbnb",
         "asOf": "2026-11-18"
-      }
+      },
+      "stageCover": "assets/stays/prime-downtown/01.webp"
     },
     {
       "id": "denver-skyland",
@@ -2458,7 +2462,8 @@
           "width": 1440,
           "height": 811,
           "alt": "Denver Skyland — Living room",
-          "room": "Living room"
+          "room": "Living room",
+          "src768": "assets/stays/denver-skyland/01-768.webp"
         },
         {
           "src": "assets/stays/denver-skyland/02.webp",
@@ -2782,7 +2787,8 @@
         "badge": null,
         "source": "Airbnb",
         "asOf": "2026-11-18"
-      }
+      },
+      "stageCover": "assets/stays/denver-skyland/01.webp"
     }
   ],
   "plans": [

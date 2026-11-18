@@ -104,6 +104,40 @@
     if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
   }
 
+  // ---- Statement: words brighten one by one as the line scrolls through the screen ----
+  const statement = document.querySelector('[data-statement]');
+  if (statement && !reduce) idle(() => {
+    const words = statement.textContent.trim().split(/\s+/);
+    const full = statement.textContent.trim();
+    statement.textContent = '';
+    const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = full;
+    statement.appendChild(sr);
+    const spans = words.map((w, i) => {
+      const s = document.createElement('span');
+      s.textContent = w + (i < words.length - 1 ? ' ' : '');
+      s.setAttribute('aria-hidden', 'true');
+      statement.appendChild(s);
+      return s;
+    });
+    statement.classList.add('is-split');
+    let lit = -1, ticking = false;
+    const paint = () => {
+      ticking = false;
+      const r = statement.getBoundingClientRect();
+      const vh = innerHeight;
+      // 0 when the block's top reaches 85% of the screen, 1 when its bottom reaches 45%.
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.4)));
+      const n = Math.round(p * spans.length);
+      if (n === lit) return;
+      spans.forEach((s, i) => s.classList.toggle('on', i < n));
+      lit = n;
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint); } };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    paint();
+  });
+
   // ---- Numbers band: count up once when it scrolls into view ----
   const counters = [...document.querySelectorAll('[data-count]')];
   if (counters.length && !reduce && 'IntersectionObserver' in window) {

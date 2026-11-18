@@ -260,3 +260,9 @@ footer{position:relative;isolation:isolate;overflow:hidden}
   .closing-cta::before{background:linear-gradient(180deg,#0b1a14e6 0%,#0b1a14b3 55%,#0b1a1426 100%)}
   .closing-cta .cc-img{object-position:56% 100%}
 }
+
+/* ---------- Statement (Casa Momo-style): words brighten as you scroll ---------- */
+.statement{padding-block:clamp(72px,10vw,150px) clamp(24px,4vw,56px)}
+.statement-text{margin:0;max-width:1180px;font:400 clamp(30px,4.3vw,64px)/1.14 var(--serif);letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+.statement-text.is-split span[aria-hidden]{color:#8f8a7e;transition:color .5s ease}
+.statement-text.is-split span[aria-hidden].on{color:var(--ink)}

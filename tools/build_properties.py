@@ -174,8 +174,8 @@ def page_head(p):
         h = h.replace("object-src 'none';", f"object-src 'none'; frame-src {origin};")
     h = re.sub(r'<body class="[^"]*"', '<body class="page-property"', h, count=1)
     h = h.replace('<script src="stay-search.js" defer></script>', "")
-    m = p["photos"][0]
-    pre = f'<link rel="preload" as="image" href="{m["src640"]}" imagesrcset="{srcset(m)}" imagesizes="{MAIN_SIZES}" fetchpriority="high">'
+    m = ordered_photos(p)[0]
+    pre = f'<link rel="preload" as="image" href="{m["src640"]}" imagesrcset="{srcset(m)}" imagesizes="{STAGE_SIZES}" fetchpriority="high">'
     h = h.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
     # Preload exactly the fonts property pages use (no medium weight).
     h = re.sub(r'<link rel="preload" href="assets/fonts/dm-sans-500-normal[^>]*>', '', h)
@@ -216,36 +216,63 @@ def srcset(x):
 MAIN_SIZES = "(max-width: 900px) calc(100vw - 40px), 66vw"
 
 
+def ordered_photos(p):
+    """Photo order for the stage and the photo tour: open on a landscape photo."""
+    ph = list(p["photos"])
+    k = next((i for i, x in enumerate(ph) if x["src"] == p.get("stageCover")), None)
+    if k is None:
+        k = next((i for i, x in enumerate(ph) if x["width"] >= x["height"]), 0)
+    return [ph[k]] + ph[:k] + ph[k + 1:]
+
+
+def room_name(x):
+    return x["alt"].split(" \u2014 ", 1)[-1] if " \u2014 " in x["alt"] else ""
+
+
+STAGE_SIZES = "(max-width: 900px) 100vw, min(1380px, 90vw)"
+ARROW_L = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M17 10H4m5-5-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+ARROW_R = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+ICON_GRID = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 3h5v5H3zM12 3h5v5h-5zM3 12h5v5H3zM12 12h5v5h-5z" stroke="currentColor" stroke-width="1.5"/></svg>'
+ICON_EXPAND = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 3H3v4M13 3h4v4M7 17H3v-4M13 17h4v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+
+
 def gallery_html(p):
-    ph = p["photos"]
-    def link(i, cls):
-        x = ph[i]
-        sizes = MAIN_SIZES if cls == "g-main" else "(max-width: 900px) 50vw, 33vw"
-        load = 'fetchpriority="high"' if i == 0 else 'loading="lazy"'
-        return (f'<a class="{cls}" href="{x["src"]}" data-photo data-alt="{E(x["alt"])}" data-w="{x["width"]}" data-h="{x["height"]}" '
-                f'aria-label="Open photo {i + 1} of {len(ph)} full screen">'
-                f'<img src="{x["src"]}" srcset="{srcset(x)}" sizes="{sizes}" '
-                f'alt="{E(x["alt"])}" width="{x["width"]}" height="{x["height"]}" {load} decoding="async"></a>')
-    side = "".join(link(i, "g-thumb") for i in range(1, min(len(ph), 3)))
-    cls = "gallery" + (" single" if len(ph) == 1 else "")
-    out = f'<div class="{cls}" data-gallery>{link(0, "g-main")}'
-    if side:
-        out += f'<div class="g-side">{side}</div>'
-    out += f'<button type="button" class="gallery-all" data-gallery-all hidden>View {plural(len(ph), "photo")}</button></div>'
-    # Hidden links keep photos beyond the first three in the viewer sequence.
-    extra = "".join(
-        f'<a href="{x["src"]}" data-photo data-alt="{E(x["alt"])}" data-w="{x["width"]}" data-h="{x["height"]}" hidden></a>'
-        for x in ph[3:])
-    out = out.replace("</div>", extra + "</div>", 1) if extra else out
-    return out
+    """Photo stage: one large photo at a time with its room name, a counter and arrows.
+    Without JavaScript it shows the first photo, linking to the full-size image."""
+    ph = ordered_photos(p)
+    n = len(ph)
+    x = ph[0]
+    first = (f'<a class="stage-slide is-active" href="{x["src"]}" data-photo data-src640="{x["src640"]}" data-alt="{E(x["alt"])}" '
+             f'data-w="{x["width"]}" data-h="{x["height"]}" aria-label="Open photo 1 of {n} full screen">'
+             f'<img src="{x["src"]}" srcset="{srcset(x)}" sizes="{STAGE_SIZES}" alt="{E(x["alt"])}" '
+             f'width="{x["width"]}" height="{x["height"]}" fetchpriority="high" decoding="async"></a>')
+    rest = "".join(
+        f'<a href="{y["src"]}" data-photo data-src640="{y["src640"]}" data-alt="{E(y["alt"])}" data-w="{y["width"]}" data-h="{y["height"]}" hidden></a>'
+        for y in ph[1:])
+    room = room_name(x) or p["name"]
+    nav = ""
+    if n > 1:
+        nav = (f'<button type="button" class="stage-btn" data-stage-prev aria-label="Previous photo">{ARROW_L}</button>'
+               f'<button type="button" class="stage-btn" data-stage-next aria-label="Next photo">{ARROW_R}</button>')
+    return (f'<section class="stage" data-gallery aria-label="Photos of {E(p["name"])}">'
+            f'<div class="stage-frame" data-stage-frame>{first}{rest}'
+            f'<button type="button" class="stage-full" data-stage-full hidden>{ICON_EXPAND}<span>Full screen</span></button></div>'
+            f'<div class="stage-bar"><div class="stage-caption">'
+            f'<p class="stage-title" data-stage-title aria-live="polite">{E(room)}</p>'
+            f'<p class="stage-meta"><span class="stage-count"><span data-stage-num>01</span> / {n:02d}</span>'
+            f'<span>{E(p["name"])} · {E(p["location"].split(" · ")[0])}</span></p></div>'
+            f'<div class="stage-controls"><button type="button" class="stage-all" data-gallery-all hidden>{ICON_GRID}<span>All {n} photos</span></button>{nav}</div></div>'
+            f'<div class="stage-progress" aria-hidden="true"><i data-stage-bar></i></div>'
+            f'</section>')
 
 
 def viewer_html(p):
     """Photo tour: a scrolling grid of every photo, plus an enlarged single view."""
-    n = len(p["photos"])
+    ph = ordered_photos(p)
+    n = len(ph)
     items = []
-    for i, x in enumerate(p["photos"]):
-        room = x["alt"].split(" \u2014 ", 1)[-1] if " \u2014 " in x["alt"] else ""
+    for i, x in enumerate(ph):
+        room = room_name(x)
         items.append(
             f'<figure class="pv-item"><button type="button" class="pv-open" data-pv-open="{i}" aria-label="Enlarge photo {i + 1} of {n}">'
             f'<img src="{x["src640"]}" srcset="{x["src640"]} 640w, {x["src"]} {x["width"]}w" sizes="(max-width: 700px) 100vw, 560px" '
