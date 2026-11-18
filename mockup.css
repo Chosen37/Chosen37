@@ -101,3 +101,6 @@ footer{background:#0f2a21}
   .page-home .property-facts{flex-direction:row;flex-wrap:wrap;gap:6px 14px;font-size:15px}
   .page-home .booking-link{font-size:17px}
 }
+
+/* Long home names (e.g. "Prime Downtown Denver") wrap instead of being clipped */
+.property-copy h3{white-space:normal;text-wrap:balance;overflow-wrap:break-word}
