@@ -114,3 +114,16 @@ footer{background:#0f2a21}
   .mgmt-actions,.closing-actions{flex-direction:column;align-items:stretch}
   .mgmt-actions .button,.closing-actions .button{width:100%;justify-content:center}
 }
+
+/* Hero photo: slow, seamless push-in and ease-back loop (transform only, no layout cost) */
+.page-home .hero-image>img.hero-drift{object-position:50% 52%;transform-origin:55% 50%;animation:heroDrift 26s ease-in-out infinite alternate;will-change:transform}
+@keyframes heroDrift{from{transform:scale(1)}to{transform:scale(1.09) translate(-1.2%,-.6%)}}
+.page-home .hero-image{overflow:hidden}
+/* Softer, wider blend into the cream on larger screens */
+@media (min-width:901px){
+  .page-home .hero-image:after{background:linear-gradient(90deg,#faf5eb 0%,#faf5eb 3%,#faf5ebd9 12%,#faf5eb80 24%,#faf5eb26 36%,transparent 48%)}
+}
+@media (max-width:900px){
+  .page-home .hero-image>img.hero-drift{object-position:50% 50%}
+}
+@media (prefers-reduced-motion:reduce){.page-home .hero-image>img.hero-drift{animation:none}}
