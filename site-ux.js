@@ -10,7 +10,7 @@
       'main .section-heading, main .property-card, main .plan-card, main .review-layout, main .plan-note,' +
       ' main .trust-grid > *, main .date-search, main .page-intro, main .steps > li, main .accordion,' +
       ' main .property-body > section, main .stack .card, main .legal-content > section, main .owner-checklist, main .closing,' +
-      ' main .stat, main .how-steps > li, main .hood, main .cc-copy, main .collection-more, main .dest, main .os-col, main .os-benefits > div, main .hero-path'
+      ' main .stat, main .how-steps > li, main .hood, main .cc-copy, main .collection-more, main .dest, main .os-col, main .os-benefits > div, main .hero-path, main .how-photo'
     )].filter(el => !el.closest('.hero, dialog'))
       // Sideways rows on smaller screens scroll horizontally, so their items don't animate in.
       .filter(el => !(el.matches('.property-card') && el.closest('.page-home') && innerWidth <= 700) && !(el.matches('.hood') && innerWidth <= 1100) && !(el.matches('.dest') && innerWidth <= 700));
@@ -93,13 +93,16 @@
 
   // ---- Section headlines: words rise out of a mask as the heading scrolls in ----
   if (!reduce && 'IntersectionObserver' in window) idle(() => {
-    const heads = [...document.querySelectorAll('.page-home main h2, .page-home .os-kicker')]
+    const heads = [...document.querySelectorAll('.page-home main h2')]
       .filter(h => !h.closest('dialog, .hero, footer') && h.getBoundingClientRect().top > innerHeight * 0.95);
     if (!heads.length) return;
     const io = new IntersectionObserver(entries => entries.forEach(e => {
       if (!e.isIntersecting) return;
-      e.target.classList.add('in');
-      io.unobserve(e.target);
+      const h = e.target;
+      h.classList.add('in');
+      io.unobserve(h);
+      // Once every word has landed, drop the masks so nothing can be clipped.
+      setTimeout(() => h.classList.add('landed'), 1400 + h.querySelectorAll('.wi').length * 55);
     }), { rootMargin: '0px 0px -12% 0px', threshold: 0.2 });
     heads.forEach(h => {
       let i = 0;
@@ -147,6 +150,50 @@
     addEventListener('resize', onScroll);
     paint();
   });
+
+  // ---- Hero headline: drop the line masks once the opening animation has played ----
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) setTimeout(() => heroTitle.classList.add('landed'), reduce ? 0 : 1700);
+
+  // ---- Landmark band: drifts on its own, speeds up with scrolling and follows its direction ----
+  const mq = document.querySelector('.mq-track');
+  if (mq && !reduce) {
+    let x = 0, vel = 0, dir = -1, lastY = scrollY, onScreen = false, raf = 0, last = 0;
+    const loop = now => {
+      const dt = Math.min(64, now - (last || now)); last = now;
+      const y = scrollY, dy = y - lastY; lastY = y;
+      if (dy) dir = dy > 0 ? -1 : 1;
+      vel += (Math.min(40, Math.abs(dy)) * 0.9 - vel) * 0.08;   // eased scroll boost
+      const half = mq.scrollWidth / 2;
+      x += dir * (0.045 * dt + vel * 0.6);
+      if (x <= -half) x += half; else if (x > 0) x -= half;
+      mq.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      raf = onScreen ? requestAnimationFrame(loop) : 0;
+    };
+    new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      if (onScreen && !raf) { last = 0; lastY = scrollY; raf = requestAnimationFrame(loop); }
+    }).observe(mq.parentElement);
+  }
+
+  // ---- Slow parallax on the full-bleed photo bands ----
+  const bands = [...document.querySelectorAll('.statement-bg, .owner-bg')];
+  if (bands.length && !reduce) {
+    let ticking = false;
+    const move = () => {
+      ticking = false;
+      const vh = innerHeight;
+      bands.forEach(el => {
+        const r = el.parentElement.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        const p = (r.top + r.height / 2 - vh / 2) / (vh + r.height);   // about -0.5 .. 0.5
+        el.style.transform = `translate3d(0,${(p * -14).toFixed(2)}%,0)${el.classList.contains('owner-bg') ? ' scale(1.14)' : ''}`;
+      });
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
+    addEventListener('resize', move);
+    move();
+  }
 
   // ---- Numbers band: count up once when it scrolls into view ----
   const counters = [...document.querySelectorAll('[data-count]')];

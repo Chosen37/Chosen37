@@ -6,18 +6,18 @@
 .page-home .hero-image>img,.page-home .hero-video{object-position:center 50%}
 .page-home .hero-image:after{background:linear-gradient(90deg,#f5f4f0 0%,#f5f4f0 4%,#f5f4f0cc 12%,#f5f4f066 22%,#f5f4f014 34%,transparent 44%)}
 .page-home .hero h1{letter-spacing:-.035em}
-.page-home .hero-actions .button-outline{background:#fdfdfb;border:2px solid #13231f;color:#13231f}
+.page-home .hero-actions .button-outline{background:#fdfdfb;border:2px solid #121824;color:#121824}
 
 /* Trust strip */
 .trust-grid .icon-airbnb{width:40px;height:40px}
 
 /* Property cards: a touch more lift, as in the mockup */
-.page-home .property-card{box-shadow:0 6px 18px #1a26221f}
+.page-home .property-card{box-shadow:0 6px 18px #191e271f}
 .page-home .registration{font-size:11px;color:#64665f;margin-top:8px}
 
 /* Management plans */
 .page-home .owner-section .plan-card>p{max-width:360px}
-.page-home .plan-badge{background:#4f7a68;color:#f8f7f3;border-color:#4f7a68;font-weight:600;padding:5px 24px;font-size:14px}
+.page-home .plan-badge{background:#3f6fae;color:#f8f7f3;border-color:#3f6fae;font-weight:600;padding:5px 24px;font-size:14px}
 
 /* Executive guest review */
 .review-band{background:var(--paper);border-top:1px solid #dcdad1;padding-block:clamp(28px,2.6vw,40px)}
@@ -27,12 +27,12 @@
 .review-quote{display:grid;grid-template-columns:40px 1fr;column-gap:18px;margin:0}
 .quote-mark{width:32px;height:24px;color:var(--gold);margin-top:6px}
 .review-quote blockquote{margin:0}
-.review-quote blockquote p{font-size:clamp(18px,1.6vw,24px);line-height:1.38;color:#13231f}
-.review-quote figcaption{grid-column:2;margin-top:10px;font-style:italic;font-weight:500;font-size:clamp(16px,1.35vw,20px);color:#13231f}
+.review-quote blockquote p{font-size:clamp(18px,1.6vw,24px);line-height:1.38;color:#121824}
+.review-quote figcaption{grid-column:2;margin-top:10px;font-style:italic;font-weight:500;font-size:clamp(16px,1.35vw,20px);color:#121824}
 
 /* Footer: solid deep-green band like the mockup */
 .footer-skyline{display:none}
-footer{background:#17302a}
+footer{background:#161f31}
 .footer-main{padding-block:28px 20px}
 .footer-main h2{font-size:17px}
 .footer-main>div>a:not(.brand),.footer-main>div>button{font-size:16px;min-height:34px;padding:3px 0;color:#e6e5df}
@@ -53,7 +53,7 @@ footer{background:#17302a}
 @media (max-width:1400px){.footer-contact>span,.footer-contact>a{font-size:14px}}
 .card-title-link{color:inherit;text-decoration:none}
 .card-title-link:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
-.page-home .plan-badge{background:#2f5a4b;border-color:#2f5a4b;color:#f8f7f3}
+.page-home .plan-badge{background:#2a4f86;border-color:#2a4f86;color:#f8f7f3}
 /* Reserve the filter bar's space before scripts reveal it (prevents a layout jump). */
 #stay-filters[hidden]{display:grid!important;visibility:hidden}
 
@@ -108,7 +108,7 @@ footer{background:#17302a}
 /* Two calls to action side by side (management hero, booking page close) */
 .mgmt-actions,.closing-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
 .closing-actions{margin-top:0}
-.owner-request{background:#fdfdfb;border:1px solid #dcdad1;border-radius:17px;padding:clamp(18px,2.4vw,28px);box-shadow:0 8px 24px #1a262214}
+.owner-request{background:#fdfdfb;border:1px solid #dcdad1;border-radius:17px;padding:clamp(18px,2.4vw,28px);box-shadow:0 8px 24px #191e2714}
 .mgmt-actions .button{flex:0 1 auto}
 @media (max-width:520px){
   .mgmt-actions,.closing-actions{flex-direction:column;align-items:stretch}
@@ -147,7 +147,7 @@ footer{background:#17302a}
 .property-photo{position:relative;overflow:hidden}
 .property-photo .card-alt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease}
 @media (hover:hover) and (pointer:fine){
-  .property-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px #1a262229}
+  .property-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px #191e2729}
   .property-card:hover .property-photo.has-alt .card-alt{opacity:1}
 }
 @media (prefers-reduced-motion:reduce){.property-card,.property-photo .card-alt{transition:none}.property-card:hover{transform:none}}
@@ -156,7 +156,7 @@ footer{background:#17302a}
 .icon-star{width:15px;height:15px;color:var(--gold-dark);flex:none}
 .card-rating,.head-rating{display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;font-size:13.5px;color:var(--muted);margin:2px 0 8px}
 .card-rating strong,.head-rating strong{color:var(--ink);font-weight:700}
-.rating-badge{display:inline-block;background:#e1e9e4;color:#24463b;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600}
+.rating-badge{display:inline-block;background:#e4ebf5;color:#1f3d6b;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600}
 .head-rating{font-size:15px;margin:8px 0 0}
 .head-rating .icon-star{width:17px;height:17px}
 .collection-rating{display:flex;justify-content:center;align-items:center;gap:6px;font-size:15px;color:var(--muted);margin-top:8px}
@@ -164,7 +164,7 @@ footer{background:#17302a}
 
 /* ===== 2. Date search (homepage) + results (stays page) ===== */
 .date-search-band{background:var(--paper);padding-top:clamp(22px,3vw,34px)}
-.date-search{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr)) auto;gap:14px;align-items:end;background:#fdfdfb;border:1px solid #dcdad1;border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px #1a262212;max-width:1100px;margin:0 auto}
+.date-search{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr)) auto;gap:14px;align-items:end;background:#fdfdfb;border:1px solid #dcdad1;border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px #191e2712;max-width:1100px;margin:0 auto}
 .ds-title{font:700 clamp(20px,1.7vw,26px)/1.1 var(--serif);color:var(--ink);margin:0 8px 8px 0;white-space:nowrap}
 .ds-title em{color:var(--gold-dark);font-weight:400}
 .ds-field{display:grid;gap:5px;font-size:13px;font-weight:600;color:var(--ink)}
@@ -181,7 +181,7 @@ footer{background:#17302a}
 .date-badge{display:inline-block;align-self:flex-start;border-radius:999px;padding:3px 11px;font-size:12.5px;font-weight:700;margin:0 0 8px}
 .date-badge.is-open{background:#e3f1df;color:#1f5a2b}
 .date-badge.is-booked{background:#f1e5e1;color:#8a2f1f}
-.date-badge.is-ask{background:#e1e9e4;color:#24463b}
+.date-badge.is-ask{background:#e4ebf5;color:#1f3d6b}
 .property-card.is-unavailable{opacity:.62}
 .property-card.is-unavailable:hover{opacity:.85}
 
@@ -190,7 +190,7 @@ footer{background:#17302a}
 @media (max-width:900px){
   .m-book-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:fixed;left:0;right:0;bottom:0;z-index:40;
     padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
-    background:#fdfdfb;border-top:1px solid #dcdad1;box-shadow:0 -6px 18px #1a26221f;transform:translateY(110%);transition:transform .3s ease}
+    background:#fdfdfb;border-top:1px solid #dcdad1;box-shadow:0 -6px 18px #191e271f;transform:translateY(110%);transition:transform .3s ease}
   .m-book-bar.is-on{transform:none}
   .m-book-bar div{display:grid;min-width:0}
   .m-book-bar strong{font:700 16px var(--serif);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
