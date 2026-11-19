@@ -1,0 +1,22 @@
+name: Capture Denver homepage preview
+on:
+  push:
+    branches: [review/denver-homepage-images]
+    paths: ['.github/workflows/capture-denver-homepage.yml']
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the live site at desktop and mobile sizes
+        run: node .github/denver-review.mjs
+      - name: Save both pictures to this review branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add homepage-previews/desktop.png homepage-previews/mobile.png
+          git commit -m "Capture the live Vail Breeze homepage on desktop and mobile"
+          git push origin HEAD:review/denver-homepage-images
