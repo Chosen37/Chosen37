@@ -579,3 +579,16 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
 /* Closing photo band: the primary button in the accent blue so it reads on the dark photo. */
 .closing-cta .button-gold{background:var(--gold);border-color:var(--gold);color:#fff}
 .closing-cta .button-gold:hover{background:var(--gold-dark);border-color:var(--gold-dark)}
+
+/* Explore Colorado on phones: postcard cards, with the whole photo on top (4:3) and the words below,
+   instead of tall, narrow panels that over-crop wide photos. */
+@media (max-width:700px){
+  .explore-grid{grid-auto-columns:86%}
+  .dest,.dest.d-7,.dest.d-5,.dest.d-6,.dest.d-4,.dest.d-12,.dest.d-tall{grid-column:auto;min-height:0;justify-content:flex-start;border-radius:16px}
+  .dest>img,.rv-ready .dest.rv>img,.rv-ready .dest.rv.in>img{position:relative;inset:auto;flex:none;width:100%;height:calc((100vw - 32px) * .86 * .75);aspect-ratio:auto;z-index:0}
+  .dest::before{display:none}
+  .dest-copy,.dest.d-12 .dest-copy{padding:18px 18px 20px;gap:8px;max-width:none}
+  .dest h3,.dest.d-12 h3{font-size:28px}
+  .dest-copy>p:not(.dest-area){font-size:14.5px;line-height:1.55}
+  .dest-credit{top:10px;right:10px;font-size:10px}
+}
