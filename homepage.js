@@ -12,6 +12,23 @@
     more.hidden = !archive.childElementCount;
   }
 
+  const gallery = document.querySelector('.vb-gallery');
+  if (gallery) {
+    const links = [...gallery.querySelectorAll('[data-scene]')];
+    const frames = [...gallery.querySelectorAll('.vb-frame')];
+    for (const link of links) {
+      link.addEventListener('click', event => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        for (const frame of frames) frame.hidden = frame.id !== link.dataset.scene;
+        for (const item of links) {
+          if (item === link) item.setAttribute('aria-current', 'true');
+          else item.removeAttribute('aria-current');
+        }
+      });
+    }
+  }
+
   const film = document.querySelector('#home-film');
   const opener = document.querySelector('[data-film-open]');
   if (!film || !opener || !film.showModal) return;
