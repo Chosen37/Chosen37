@@ -28,7 +28,9 @@
 
   // ---- Stays page: show which homes are open for the chosen dates ----
   const params = new URLSearchParams(location.search);
-  const ci = params.get('checkin'), co = params.get('checkout'), guests = params.get('guests');
+  const ci = params.get('checkin'), co = params.get('checkout');
+  const requestedGuests = params.get('guests');
+  const guests = /^[1-6]$/.test(requestedGuests || '') ? requestedGuests : null;
   const cards = [...document.querySelectorAll('.property-grid-full .property-card')];
   if (!cards.length || !valid(ci) || !valid(co) || co <= ci) return;
 
@@ -44,7 +46,15 @@
   const intro = document.createElement('div');
   intro.className = 'date-results';
   intro.setAttribute('role', 'status');
-  intro.innerHTML = `<p><strong>${short(ci)} – ${short(co)}</strong> · ${nights} night${nights === 1 ? '' : 's'}${guests ? ` · ${guests} guest${guests === '1' ? '' : 's'}` : ''}</p><a href="stays.html">Clear dates</a>`;
+  const description = document.createElement('p');
+  const range = document.createElement('strong');
+  range.textContent = `${short(ci)} – ${short(co)}`;
+  description.append(range, ` · ${nights} night${nights === 1 ? '' : 's'}`);
+  if (guests) description.append(` · ${guests} guest${guests === '1' ? '' : 's'}`);
+  const clear = document.createElement('a');
+  clear.href = 'stays.html';
+  clear.textContent = 'Clear dates';
+  intro.append(description, clear);
   const grid = document.querySelector('.property-grid-full');
   grid.parentElement.insertBefore(intro, grid);
 
@@ -53,7 +63,6 @@
     .catch(() => ({ properties: {} }))
     .then(data => {
       const all = data.properties || {};
-      let open = 0;
       cards.forEach(card => {
         const ranges = all[card.id];
         const badge = document.createElement('p');
@@ -67,16 +76,13 @@
           card.classList.add('is-unavailable');
         } else {
           badge.classList.add('is-open');
-          badge.textContent = 'Open for your dates';
-          open++;
+          badge.textContent = 'No calendar block for these dates';
         }
         card.querySelector('.property-copy').prepend(badge);
       });
       const note = document.createElement('p');
       note.className = 'date-note';
-      note.textContent = open
-        ? `${open} home${open === 1 ? ' is' : 's are'} confirmed open. Others can be requested and we will check them for you.`
-        : 'Send a request for any home and we will confirm availability for these dates.';
+      note.textContent = 'Your host confirms availability and the total price when you request dates.';
       intro.appendChild(note);
     });
 })();
