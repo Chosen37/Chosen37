@@ -127,6 +127,7 @@ LICENSE_URLS = {
     "CC BY-SA 2.0": "https://creativecommons.org/licenses/by-sa/2.0/",
     "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
     "CC BY 2.0": "https://creativecommons.org/licenses/by/2.0/",
+    "CC0": "https://creativecommons.org/publicdomain/zero/1.0/",
 }
 
 

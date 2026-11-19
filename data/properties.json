@@ -456,7 +456,6 @@
       "rating": {
         "average": 4.97,
         "count": 31,
-        "badge": "Top 10% of homes",
         "source": "Airbnb",
         "asOf": "2026-11-18"
       }
@@ -1206,7 +1205,6 @@
       "rating": {
         "average": 4.99,
         "count": 79,
-        "badge": "Top 5% of homes",
         "source": "Airbnb",
         "asOf": "2026-11-18"
       },

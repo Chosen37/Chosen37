@@ -37,12 +37,12 @@
       "area": "Lower Downtown",
       "name": "LoDo",
       "text": "Red-brick warehouses reborn as breweries, galleries and restaurants. Wynkoop Brewing, Colorado’s first brewpub, anchors the neighborhood.",
-      "alt": "Wynkoop Brewing Company in a red-brick warehouse building in Lower Downtown Denver",
+      "alt": "Brick warehouses, lamp-lit sidewalks and downtown towers on a Saturday night in lower downtown Denver",
       "stay": "executive-lodo",
       "credit": {
-        "by": "Jeffrey Beall",
-        "license": "CC BY-SA 3.0",
-        "source": "https://commons.wikimedia.org/wiki/File:Wynkoop.JPG"
+        "by": "Paul Sableman",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Downtown_Denver_on_Saturday_Night_(4931684260).jpg"
       },
       "img": "assets/explore/lodo"
     },
@@ -52,12 +52,12 @@
       "area": "Downtown Denver",
       "name": "16th Street",
       "text": "A tree-lined pedestrian promenade through the heart of downtown, with shops, patios and street life from Union Station toward Civic Center.",
-      "alt": "Pedestrians on the tree-lined 16th Street Mall in downtown Denver on a summer day",
+      "alt": "The 16th Street Mall at night, its trees wrapped in lights beneath the illuminated D&F clock tower",
       "stay": "prime-downtown",
       "credit": {
-        "by": "Luis Toro",
+        "by": "Yuya Sekiguchi",
         "license": "CC BY 2.0",
-        "source": "https://commons.wikimedia.org/wiki/File:16th_Street_Mall_August_2008_(2803788634).jpg"
+        "source": "https://commons.wikimedia.org/wiki/File:%E3%83%87%E3%83%B3%E3%83%90%E3%83%BC%E5%B8%82%E8%A1%97_16th_Street_Mall_(8256719402).jpg"
       },
       "img": "assets/explore/sixteenth-street"
     },
@@ -92,34 +92,34 @@
       "img": "assets/explore/rino"
     },
     {
-      "id": "highlands",
+      "id": "confluence-park",
       "size": "d-6",
-      "area": "Northwest Denver",
-      "name": "The Highlands",
-      "text": "Cross the Highland Bridge from downtown to Victorian streets, rooftop restaurants and some of the best skyline views in the city.",
-      "alt": "People crossing the Highland Bridge pedestrian bridge toward the Denver skyline at dusk",
+      "area": "South Platte River · Next to LoDo",
+      "name": "Confluence Park",
+      "text": "Where Cherry Creek meets the South Platte: river steps, summer crowds, kayakers on the rapids and the flagship REI in a restored 1901 power plant.",
+      "alt": "Crowds on the river steps at Confluence Park in Denver at sunset, with an arched bridge and the brick REI building behind",
       "stay": null,
       "credit": {
-        "by": "Jesse James",
-        "license": "CC BY 4.0",
-        "source": "https://commons.wikimedia.org/wiki/File:Highland_Bridge,_Denver_(55028556586).jpg"
+        "by": "Pdubs.94",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Confluence_Park_Denver_20230708.jpg"
       },
-      "img": "assets/explore/highlands"
+      "img": "assets/explore/confluence-park"
     },
     {
-      "id": "cherry-creek",
+      "id": "denver-art-museum",
       "size": "d-5",
-      "area": "Cherry Creek",
-      "name": "Cherry Creek",
-      "text": "Denver’s polished shopping and dining district, with boutiques, galleries and the summer Cherry Creek Arts Festival.",
-      "alt": "Crowds walking among tents at the Cherry Creek Arts Festival in Denver",
+      "area": "Golden Triangle · Civic Center",
+      "name": "Denver Art Museum",
+      "text": "Daniel Libeskind’s titanium-clad Hamilton Building is as much sculpture as museum, with world-class collections beside Civic Center Park and the Central Library.",
+      "alt": "The angular, titanium-clad Hamilton Building of the Denver Art Museum",
       "stay": null,
       "credit": {
-        "by": "InSapphoWeTrust",
-        "license": "CC BY-SA 2.0",
-        "source": "https://commons.wikimedia.org/wiki/File:Cherry_Creek_Arts_Festival,_Denver_(6067733323).jpg"
+        "by": "Daniel Hartwig",
+        "license": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Denver_Art_Museum_(54940752080).jpg"
       },
-      "img": "assets/explore/cherry-creek"
+      "img": "assets/explore/denver-art-museum"
     },
     {
       "id": "red-rocks",
