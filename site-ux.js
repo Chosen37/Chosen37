@@ -30,7 +30,7 @@
           el.classList.add('in');
           io.unobserve(el);
         });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      }, { rootMargin: '0px 0px 12% 0px', threshold: 0.01 });
       below.forEach(el => io.observe(el));
     }
   });
@@ -155,30 +155,9 @@
   const heroTitle = document.querySelector('.hero-title');
   if (heroTitle) setTimeout(() => heroTitle.classList.add('landed'), reduce ? 0 : 1700);
 
-  // ---- Landmark band: drifts on its own, speeds up with scrolling and follows its direction ----
-  const mq = document.querySelector('.mq-track');
-  if (mq && !reduce) {
-    let x = 0, vel = 0, dir = -1, lastY = scrollY, onScreen = false, raf = 0, last = 0;
-    const loop = now => {
-      const dt = Math.min(64, now - (last || now)); last = now;
-      const y = scrollY, dy = y - lastY; lastY = y;
-      if (dy) dir = dy > 0 ? -1 : 1;
-      vel += (Math.min(40, Math.abs(dy)) * 0.9 - vel) * 0.08;   // eased scroll boost
-      const half = mq.scrollWidth / 2;
-      x += dir * (0.045 * dt + vel * 0.6);
-      if (x <= -half) x += half; else if (x > 0) x -= half;
-      mq.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
-      raf = onScreen ? requestAnimationFrame(loop) : 0;
-    };
-    new IntersectionObserver(([e]) => {
-      onScreen = e.isIntersecting;
-      if (onScreen && !raf) { last = 0; lastY = scrollY; raf = requestAnimationFrame(loop); }
-    }).observe(mq.parentElement);
-  }
-
   // ---- Slow parallax on the full-bleed photo bands ----
   const bands = [...document.querySelectorAll('.statement-bg, .owner-bg')];
-  if (bands.length && !reduce) {
+  if (bands.length && !reduce && matchMedia('(min-width: 901px)').matches) {
     let ticking = false;
     const move = () => {
       ticking = false;
