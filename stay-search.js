@@ -67,6 +67,8 @@
         const ranges = all[card.id];
         const badge = document.createElement('p');
         badge.className = 'date-badge';
+        // Long-term rentals already carry their own label on the card.
+        if (card.querySelector('.lt-tag')) return;
         if (!ranges) {
           badge.classList.add('is-ask');
           badge.textContent = 'Request these dates';

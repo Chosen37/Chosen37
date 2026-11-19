@@ -99,10 +99,12 @@ def relink_cards(path):
         b = re.sub(rf'<h3>(?:<a class="card-title-link" href="[^"]*">)?{re.escape(E(name, quote=False))}(?:</a>)?</h3>',
                    f'<h3><a class="card-title-link" href="{page}">{E(name, quote=False)}</a></h3>', b, count=1)
         b = re.sub(r'<a class="button button-gold booking-link" href="[^"]*"[^>]*>.*?</a>',
-                   f'<a class="button button-gold booking-link" href="{page}" aria-label="View &amp; book {E(name)}">View &amp; book</a>', b, count=1, flags=re.S)
+                   (f'<a class="button button-gold booking-link" href="{page}" aria-label="View &amp; request {E(name)}">View &amp; request</a>' if p.get("longTerm") else f'<a class="button button-gold booking-link" href="{page}" aria-label="View &amp; book {E(name)}">View &amp; book</a>'), b, count=1, flags=re.S)
         # rating line under the location (rebuilt each run)
         b = re.sub(r'<p class="card-rating">.*?</p>', '', b, flags=re.S)
-        b = b.replace('<p class="property-facts">', rating_html(p) + '<p class="property-facts">', 1)
+        b = re.sub(r'<p class="lt-tag">.*?</p>', '', b, flags=re.S)
+        lt = '<p class="lt-tag">Long-term rental · Request availability</p>' if p.get("longTerm") else ""
+        b = b.replace('<p class="property-facts">', rating_html(p) + lt + '<p class="property-facts">', 1)
         # second photo, shown on hover
         alt = p["photos"][1]["src640"] if len(p["photos"]) > 1 else ""
         b = re.sub(r'<a class="property-photo"( data-alt-src="[^"]*")?', f'<a class="property-photo" data-alt-src="{alt}"', b, count=1)
@@ -344,6 +346,8 @@ def booking_panel(p):
                 f'<p class="sync-note">Availability syncs with our other booking channels through {E(db["provider"])}. '
                 f'Your dates are confirmed only after checkout completes.</p>{contact}</aside>')
     n = E(p["name"])
+    if p.get("longTerm"):
+        return longterm_panel(p, n, contact)
     return (f'<aside class="booking-panel" id="book" aria-labelledby="book-title"><h2 id="book-title">Request to book</h2>'
             f'<p>Choose your dates and send a request directly to Vail Breeze. We reply to confirm availability and your total price.</p>'
             f'<div class="avail" data-avail data-property-id="{p["id"]}" hidden></div>'
@@ -372,6 +376,40 @@ def booking_panel(p):
             f'</form>'
             f'<p class="sync-note">We confirm your dates, nightly rate, cleaning fee, and taxes in our reply, along with secure payment instructions. '
             f'Your stay is booked only once you accept and pay.</p>'
+            f'{contact}</aside>')
+
+
+def longterm_panel(p, n, contact):
+    """Long-term rental: the calendar shows every night as taken, and the form asks for a move-in date."""
+    i = p["id"]
+    terms = ["1 to 3 months", "3 to 6 months", "6 to 12 months", "12 months or longer", "Flexible"]
+    return (f'<aside class="booking-panel booking-longterm" id="book" aria-labelledby="book-title">'
+            f'<p class="lt-flag">Long-term rental</p><h2 id="book-title">Request availability</h2>'
+            f'<p>{n} is currently leased to a long-term resident, so its calendar is closed. Tell us when you would like to move in. '
+            f'We will let you know when it opens up, or suggest a similar home that is available.</p>'
+            f'<div class="avail" data-avail-closed data-property-id="{i}" hidden></div>'
+            f'<form class="request-form" action="{REQUEST_ENDPOINT}" method="POST" data-avail-request data-property="{n}">'
+            f'<input type="hidden" name="_subject" value="Availability request: {n}">'
+            f'<input type="hidden" name="_template" value="table">'
+            f'<input type="hidden" name="_next" value="" data-next>'
+            f'<input type="hidden" name="Property" value="{n}">'
+            f'<div class="hp-field" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>'
+            f'<div class="rq-row"><label for="rq-move-{i}">Preferred move-in<input id="rq-move-{i}" name="Preferred move-in" type="date" required data-movein></label>'
+            f'<label for="rq-term-{i}">Length of stay<select id="rq-term-{i}" name="Length of stay" required>'
+            + "".join(f'<option>{E(x)}</option>' for x in terms)
+            + f'</select></label></div>'
+            f'<label for="rq-guests-{i}">Guests<select id="rq-guests-{i}" name="Guests" required>'
+            + "".join(f'<option value="{g}"{" selected" if g == min(2, p["guests"]) else ""}>{plural(g, "guest")}</option>' for g in range(1, p["guests"] + 1))
+            + f'</select></label>'
+            f'<label for="rq-name-{i}">Full name<input id="rq-name-{i}" name="Name" autocomplete="name" required maxlength="100"></label>'
+            f'<label for="rq-email-{i}">Email<input id="rq-email-{i}" name="email" type="email" autocomplete="email" required maxlength="150"></label>'
+            f'<label for="rq-phone-{i}"><span>Phone <span class="optional">(optional)</span></span><input id="rq-phone-{i}" name="Phone" type="tel" autocomplete="tel" maxlength="40"></label>'
+            f'<label for="rq-msg-{i}"><span>Message <span class="optional">(optional)</span></span><textarea id="rq-msg-{i}" name="Message" rows="3" maxlength="2000" placeholder="Who will be living here, pets, work or relocation plans"></textarea></label>'
+            f'<label class="rq-consent" for="rq-ok-{i}"><input id="rq-ok-{i}" type="checkbox" name="Acknowledged" value="Yes" required>'
+            f'<span>I understand this is a request for availability, not a lease or reservation. See our <a href="privacy.html">Privacy Policy</a>.</span></label>'
+            f'<button class="button button-gold" type="submit">Request availability</button>'
+            f'</form>'
+            f'<p class="sync-note">We reply by email, usually within one business day. Lease terms, rent and deposit are agreed directly with Vail Breeze.</p>'
             f'{contact}</aside>')
 
 
@@ -446,7 +484,7 @@ def detail_page(p, others):
             f'<div class="property-grid">{other_cards}</div></section>'
             f'{viewer_html(p)}'
             f'<div class="m-book-bar" data-book-bar><div><strong>{E(p["name"])}</strong><span>Up to {plural(p["guests"], "guest")} · {plural(p["bedrooms"], "bedroom")}</span></div>'
-            f'<a class="button button-gold" href="#book">Request to book</a></div></main>')
+            f'<a class="button button-gold" href="#book">{"Request availability" if p.get("longTerm") else "Request to book"}</a></div></main>')
     return page_head(p) + main + foot
 
 

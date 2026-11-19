@@ -458,7 +458,8 @@
         "count": 31,
         "source": "Airbnb",
         "asOf": "2026-11-18"
-      }
+      },
+      "longTerm": true
     },
     {
       "id": "executive-lodo",
@@ -1879,7 +1880,8 @@
         "badge": null,
         "source": "Airbnb",
         "asOf": "2026-11-18"
-      }
+      },
+      "longTerm": true
     },
     {
       "id": "prime-downtown",

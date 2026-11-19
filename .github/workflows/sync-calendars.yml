@@ -2,7 +2,7 @@
 # Setup (once, on github.com):
 #   1. Settings -> Secrets and variables -> Actions -> New repository secret
 #      Name: CALENDAR_URLS
-#      Value: {"curtis-park": "https://www.airbnb.com/calendar/ical/....ics?t=...", "mountain-view": "..."}
+#      Value: {"denver-skyland": "https://www.airbnb.com/calendar/ical/....ics?t=...", "prime-downtown": "..."}
 #   2. Optional variable SITE_BRANCH = the branch the website is published from (default: gh-pages)
 # Scheduled workflows only run from the repository's default branch, so this file must also exist on main.
 name: Sync Airbnb calendars

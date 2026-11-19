@@ -177,3 +177,50 @@
     }
   });
 })();
+
+// Long-term rentals: a closed calendar (every night taken) and an availability request form.
+(() => {
+  const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const today = iso(new Date());
+  document.querySelectorAll('[data-avail-request]').forEach(form => {
+    const next = form.querySelector('[data-next]');
+    if (next) next.value = new URL('request-sent.html', location.href).href;
+    const movein = form.querySelector('[data-movein]');
+    if (movein) movein.min = today;
+    form.addEventListener('submit', () => {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      setTimeout(() => { btn.disabled = false; btn.textContent = 'Request availability'; }, 8000);
+    });
+  });
+  document.querySelectorAll('[data-avail-closed]').forEach(root => {
+    const now = new Date();
+    let view = new Date(now.getFullYear(), now.getMonth(), 1);
+    const first = new Date(view), last = new Date(view.getFullYear(), view.getMonth() + 12, 1);
+    root.innerHTML =
+      '<div class="avail-head"><button type="button" class="avail-nav" data-prev aria-label="Previous month">‹</button>' +
+      '<p class="avail-month" aria-live="polite"></p>' +
+      '<button type="button" class="avail-nav" data-next aria-label="Next month">›</button></div>' +
+      '<div class="avail-grid" aria-label="Availability: leased long term"></div>' +
+      '<p class="avail-legend"><span class="sw sw-booked"></span>Leased long term</p>';
+    const grid = root.querySelector('.avail-grid');
+    const label = root.querySelector('.avail-month');
+    const render = () => {
+      root.querySelector('[data-prev]').disabled = view <= first;
+      root.querySelector('[data-next]').disabled = view >= last;
+      label.textContent = view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      let html = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => `<span class="avail-dow">${d}</span>`).join('');
+      for (let i = 0; i < view.getDay(); i++) html += '<span></span>';
+      const days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+      for (let d = 1; d <= days; d++) {
+        const s = iso(new Date(view.getFullYear(), view.getMonth(), d));
+        html += `<span class="avail-day ${s < today ? 'is-past' : 'is-booked'}" aria-hidden="true">${d}</span>`;
+      }
+      grid.innerHTML = html;
+    };
+    root.querySelector('[data-prev]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
+    root.querySelector('[data-next]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+    root.hidden = false;
+    render();
+  });
+})();
