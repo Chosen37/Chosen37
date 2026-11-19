@@ -520,3 +520,51 @@ img.gr-avatar{object-fit:cover;padding:0;background:#ecebe5}
 .plan-list .link-arrow{font-size:16px}
 @media (max-width:800px){.plan-list{grid-template-columns:1fr;gap:28px}}
 .os-cta{margin-bottom:0}
+
+/* ---------- Animated typography ---------- */
+/* Hero headline: each line rises out of its own mask as the page opens. */
+.hero-title .hl{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
+.hero-title .hli{display:inline-block;padding-right:.08em}
+.hero-title em{display:inline-block}
+@media (prefers-reduced-motion:no-preference){
+  .hero-title .hli{animation:hlUp 1.15s cubic-bezier(.19,1,.22,1) .05s both}
+  .hero-title .hl+.hl .hli{animation-delay:.17s}
+  .hero-title em{animation:emIn 1.4s cubic-bezier(.19,1,.22,1) .45s both}
+  .page-home .hero-paths{animation:fadeUp 1s cubic-bezier(.19,1,.22,1) .5s both}
+  .page-home .hero .hero-path+.hero-path{animation:fadeUp 1s cubic-bezier(.19,1,.22,1) .62s both}
+}
+@keyframes hlUp{from{transform:translateY(102%) rotate(2deg)}to{transform:none}}
+@keyframes emIn{from{opacity:0;filter:blur(10px);transform:translateX(.18em)}to{opacity:1;filter:none;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* Section headlines: words slide up from behind a mask when the heading scrolls in. */
+.tx-split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .06em .12em 0;margin:0 -.06em -.12em 0}
+.tx-split .wi{display:inline-block;transform:translateY(110%);transition:transform 1.05s cubic-bezier(.19,1,.22,1) var(--d,0ms)}
+.tx-split.in .wi{transform:none}
+.tx-split em .wi{transition-duration:1.3s}
+
+/* The statement: words sharpen and light up as it scrolls through the screen;
+   the two key phrases land in sage italic. */
+.statement-text em{font-style:italic}
+.statement-text.is-split .sw{display:inline-block;opacity:.18;filter:blur(6px);transform:translateY(.32em);transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.19,1,.22,1),color .8s ease;will-change:opacity,transform}
+.statement-text.is-split .sw.on{opacity:1;filter:none;transform:none;color:#fff}
+.statement-text.is-split em .sw.on{color:var(--gold-light)}
+.statement-text:not(.is-split) em{color:var(--gold-light)}
+.statement-kicker{transition:letter-spacing 1.4s cubic-bezier(.19,1,.22,1),opacity 1s ease}
+.statement-kicker::before{transition:width 1.2s cubic-bezier(.19,1,.22,1) .2s}
+.statement.kick-wait .statement-kicker{opacity:0;letter-spacing:.5em}
+.statement.kick-wait .statement-kicker::before{width:0}
+
+/* Place-name band: a slow, oversized line of Denver landmarks. */
+.marquee{overflow:hidden;padding-block:clamp(40px,6vw,88px) clamp(8px,2vw,24px);user-select:none}
+.mq-track{display:flex;width:max-content}
+.mq-set{display:flex;align-items:center;flex:none}
+.mq-item{padding-inline:clamp(18px,2.4vw,40px);font:400 clamp(48px,8.4vw,136px)/1 var(--serif);letter-spacing:-.045em;color:var(--ink);white-space:nowrap}
+.mq-item:nth-child(4n+3){font-style:italic;color:transparent;-webkit-text-stroke:1.2px var(--gold)}
+.mq-dot{flex:none;width:clamp(10px,1vw,16px);height:clamp(10px,1vw,16px);border-radius:50%;background:var(--gold)}
+@media (prefers-reduced-motion:no-preference){
+  .mq-track{animation:mq 70s linear infinite}
+  .marquee:hover .mq-track{animation-play-state:paused}
+}
+@keyframes mq{to{transform:translateX(-50%)}}
+.marquee+.explore-section{padding-top:clamp(40px,5vw,72px)}

@@ -71,29 +71,72 @@
     }, { once: true });
   }
 
-  // ---- Statement: words brighten one by one as the line scrolls through the screen ----
+  // Wrap every word of an element in spans, keeping <em>/<br> and spacing intact.
+  const splitWords = (el, make) => {
+    const out = [];
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+            const s = make(part); out.push(s); frag.appendChild(s.outer || s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+      });
+    };
+    walk(el);
+    return out;
+  };
+
+  // ---- Section headlines: words rise out of a mask as the heading scrolls in ----
+  if (!reduce && 'IntersectionObserver' in window) idle(() => {
+    const heads = [...document.querySelectorAll('.page-home main h2, .page-home .os-kicker')]
+      .filter(h => !h.closest('dialog, .hero, footer') && h.getBoundingClientRect().top > innerHeight * 0.95);
+    if (!heads.length) return;
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }), { rootMargin: '0px 0px -12% 0px', threshold: 0.2 });
+    heads.forEach(h => {
+      let i = 0;
+      splitWords(h, word => {
+        const w = document.createElement('span'); w.className = 'w';
+        const wi = document.createElement('span'); wi.className = 'wi'; wi.textContent = word;
+        wi.style.setProperty('--d', `${Math.min(i++, 14) * 55}ms`);
+        w.appendChild(wi);
+        return w;
+      });
+      h.classList.add('tx-split');
+      io.observe(h);
+    });
+  });
+
+  // ---- Statement: words sharpen and light up one by one as the line scrolls through ----
   const statement = document.querySelector('[data-statement]');
   if (statement && !reduce) idle(() => {
-    const words = statement.textContent.trim().split(/\s+/);
-    const full = statement.textContent.trim();
-    statement.textContent = '';
-    const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = full;
-    statement.appendChild(sr);
-    const spans = words.map((w, i) => {
-      const s = document.createElement('span');
-      s.textContent = w + (i < words.length - 1 ? ' ' : '');
-      s.setAttribute('aria-hidden', 'true');
-      statement.appendChild(s);
+    const section = statement.closest('.statement');
+    const spans = splitWords(statement, word => {
+      const s = document.createElement('span'); s.className = 'sw'; s.textContent = word;
       return s;
     });
     statement.classList.add('is-split');
+    // The kicker line draws in and its letters tighten when the section arrives.
+    if (section && section.getBoundingClientRect().top > innerHeight * 0.9 && 'IntersectionObserver' in window) {
+      section.classList.add('kick-wait');
+      const kio = new IntersectionObserver(([e]) => { if (e.isIntersecting) { section.classList.remove('kick-wait'); kio.disconnect(); } }, { threshold: 0.25 });
+      kio.observe(section);
+    }
     let lit = -1, ticking = false;
     const paint = () => {
       ticking = false;
       const r = statement.getBoundingClientRect();
       const vh = innerHeight;
-      // 0 when the block's top reaches 85% of the screen, 1 when its bottom reaches 45%.
-      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.4)));
+      // 0 when the block's top reaches 85% of the screen; fully lit by the time its bottom reaches about 70%.
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.15)));
       const n = Math.round(p * spans.length);
       if (n === lit) return;
       spans.forEach((s, i) => s.classList.toggle('on', i < n));
