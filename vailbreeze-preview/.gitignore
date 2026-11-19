@@ -1,0 +1,2 @@
+# Private Airbnb calendar links (contain secret keys) - never commit
+.calendars.json
